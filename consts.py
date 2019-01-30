@@ -70,7 +70,7 @@ AUTO_ADD_SINGLE_SUFFIX = False
 SPECIAL_CHARS_COMPATIBILITY_LEVEL = 1
 
 # Verbose output: show debug logs (log.debug methods)
-VERBOSE_OUTPUT = True
+VERBOSE_OUTPUT = False
 
 # --- Special chars ---
 SPECIAL_CHARS = {}
@@ -98,9 +98,13 @@ if SPECIAL_CHARS_COMPATIBILITY_LEVEL >= 2:
 def _list_logvariants():
     logvariants = str()
     for k in LOG_TYPES:
-        logvariants += f'             - "{LOG_TYPES[k]}{LOG_TYPE_SEPARATOR}" {k.title()}\n'
+        v = LOG_TYPES[k]
+        k = k.title()
+        if k == 'debug' and not VERBOSE_OUTPUT: k+=' (deactivated)'
+        logvariants += f'             - "{v}{LOG_TYPE_SEPARATOR}" {k}\n'
     return logvariants
 
+# TODO move this out of consts
 WATERMARK = """
                       __  __  __  __  _____   _       
                      |  \/  | \ \/ / |___ /  ( )  ___ 
