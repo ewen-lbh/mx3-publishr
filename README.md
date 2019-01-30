@@ -10,11 +10,11 @@ A script to automate the tedious process of getting music out.
 - Filename
 - Collection name (if it is) ¤
 - Description ¤
-- - French
-- - English
+  - French
+  - English
 - Cover art 
-- - Landscape version
-- - Square version (cropped landscape version if not provided)
+  - Landscape version
+  - Square version (cropped landscape version if not provided)
 - Video (auto-generated w/ fade in&out, using landscape cover if not provided)
 
 ¤ means explicitly added by user
@@ -27,14 +27,14 @@ nothing means implicitly fetched with predetermined paths & filenaming schemes
 ### DATA UPLOADED
 - Database
 - Social networks (using buffer)
-- - Cover arts (FB/TW:Landscape/IG:Square, with button "out now" added)
+  - Cover arts (FB/TW:Landscape/IG:Square, with button "out now" added)
 - Website filesystem
-- - Cover arts 
-- - Full album
-- - Audio file(s)
+  - Cover arts 
+  - Full album
+  - Audio file(s)
 - YouTube (1 week delay ?)
-- - Video
-- - Cover art (used for thumbnail, landscape version)
+  - Video
+  - Cover art (used for thumbnail, landscape version)
 - Newsletter
 
 ### FILES MODIFIED
