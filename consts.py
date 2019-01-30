@@ -100,7 +100,7 @@ def _list_logvariants():
     for k in LOG_TYPES:
         v = LOG_TYPES[k]
         k = k.title()
-        if k == 'debug' and not VERBOSE_OUTPUT: k+=' (deactivated)'
+        if k == 'Debug' and not VERBOSE_OUTPUT: k+=' (deactivated)'
         logvariants += f'             - "{v}{LOG_TYPE_SEPARATOR}" {k}\n'
     return logvariants
 
