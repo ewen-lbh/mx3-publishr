@@ -28,9 +28,9 @@ AUDIOS_FILENAME_REGEX = r'(\d{2,}) - (.+) - (.+)\.\w{3,}$'
 # Common to [artist], [track] and [collection]
 FIELDS_FORBIDDEN_CHARS = ['.', '<', '>', '/', '\\']
 
-# Kinds
-COLLECTION_KINDS = ['ep', 'album']
-AVAIL_KINDS = ['ep', 'album', 'single', 'remix']
+# Types
+COLLECTION_TYPES = ['ep', 'album']
+AVAIL_TYPES = ['ep', 'album', 'single', 'remix']
 
 # Your artist name
 SELF_NAME = 'Mx3'
