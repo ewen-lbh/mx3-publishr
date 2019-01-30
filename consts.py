@@ -3,21 +3,22 @@
 ENV = 'dev'
 
 # === FILES ===
+BASEPATHS = {}
 # Cover art consts
-COVERARTS_BASEPATH = 'D:/Users/ewenl/Desktop/GRAPHISM/Sync/Covers/'
-COVERARTS_FILENAME_SCHEME = '[collection] cover art ([format]).png'
-COVERARTS_FILENAME_REGEX = r'(.+) cover art (.+)\.png'
+BASEPATH['covers'] = 'D:/Users/ewenl/Desktop/GRAPHISM/Sync/Covers/'
+COVERS_FILENAME_SCHEME = '[collection] cover art ([format]).png'
+COVERS_FILENAME_REGEX = r'(.+) cover art (.+)\.png'
 
 # Music videos consts
-MUSICVIDEO_COVERART_FORMAT_USED = 'landscape'
-MUSICVIDEO_BASEPATH = 'D:/Users/ewenl/Desktop/GRAPHISM/Mx3 YT/'
-MUSICVIDEO_FILENAME_SCHEME = '[artist] - [track].mp4'
-MUSICVIDEO_FILENAME_REGEX = r'(.+) - (.+)\.mp4'
+VIDEOS_COVERART_FORMAT_USED = 'landscape'
+BASEPATH['videos'] = 'D:/Users/ewenl/Desktop/GRAPHISM/Mx3 YT/'
+VIDEOS_FILENAME_SCHEME = '[artist] - [track].mp4'
+VIDEOS_FILENAME_REGEX = r'(.+) - (.+)\.mp4'
 
 # Audio file consts
-AUDIOFILE_BASEPATH = 'D:/Users/ewenl/Documents/Image-Line/Data/FL Studio/Projects/#DONE/'
-AUDIOFILE_FILENAME_SCHEME = '[tracknumber] - [artist] - [track].mp3'
-AUDIOFILE_FILENAME_REGEX = r'((\d{2,}) - )?(.+) - (.+)\.mp3'
+BASEPATH['audios'] = 'D:/Users/ewenl/Documents/Image-Line/Data/FL Studio/Projects/#DONE/'
+AUDIOS_FILENAME_SCHEME = '[tracknumber] - [artist] - [track].mp3'
+AUDIOS_FILENAME_REGEX = r'((\d{2,}) - )?(.+) - (.+)\.mp3'
 
 # === FIELDS ===
 # Common to [artist], [track] and [collection]
@@ -105,6 +106,7 @@ def _list_logvariants():
     return logvariants
 
 # TODO move this out of consts
+# TODO use pyfiglet instead of harcoded logos
 WATERMARK = """
                       __  __  __  __  _____   _       
                      |  \/  | \ \/ / |___ /  ( )  ___ 

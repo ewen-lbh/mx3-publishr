@@ -37,7 +37,7 @@ class Track:
             if has_multiple_tracks:
                 audiofolder_path = get_resource_path('audiofolder', self.parent.collection)
                 if os.path.isdir(audiofolder_path):
-                    log.log('Fetching track list...')
+                    log.debug('Fetching track list...')
                     fileslist = os.listdir(audiofolder_path)
                     tracklist = []
                     for f in fileslist:
@@ -51,10 +51,10 @@ class Track:
                         }, returnstyle))
                     return tracklist
                 else:
-                    log.log('No folder for audiofiles found. Correct path:\n       '+str(audiofolder_path), 'FATAL')
+                    log.fatal('No folder for audio files found.')
                     return False
             else:
-                log.log('The '+self.parent.tracktype+' shouldn\'t have multiple tracks.\n   This may cause errors. The script will continue as if the tracklist was not found.','E')
+                log.warn('The '+self.parent.tracktype+' shouldn\'t have multiple tracks.\n   This may cause errors. The script will continue as if the tracklist was not found.')
                 return False
 
     class Video:
@@ -63,21 +63,31 @@ class Track:
             self.parent = parentself  
         
         def list(self, returnstyle="path"):
-            if os.isdir
+            if os.isdir(self.parent.folders.video):
+                return os.listdir(self.parent.folders.video)
+            else:
+                log.error('Music videos directory does not exist, creating one...')
+                os.mkdir(self.parent.folders.video)
+                log.success(f'Directory "{self.parent.folders.video}" created')
+                return []
 
         def missing(self, retunstyle='path'):
+            log.info('Getting missing videos...')
             videolist = self.list()
             tracklist = self.parent.audio.list()
             if len(videolist) == len(tracklist):
+                log.info(f'No video missing')
                 return []
             else:
                 if returnstyle == 'path':
-                    vids   = videolist
+                    videos = videolist
                     audios = tracklist
                 else:
-                    vids   = [filename(i) for i in videolist]
+                    videos = [filename(i) for i in videolist]
                     audios = [filename(i) for i in tracklist]
-                
-                return list(set(auds) - set(vids))
+
+                missing_vids = list(set(audios) - set(videos))
+                log.info(f'Missing {len(missing_vids)} video(s):\n{'\n'.join(missing_vids)}')
+                return missing_vids
             
 
