@@ -56,6 +56,38 @@ class Track:
             else:
                 log.warn('The '+self.parent.tracktype+' shouldn\'t have multiple tracks.\n   This may cause errors. The script will continue as if the tracklist was not found.')
                 return False
+        def rename(self):
+            regex_artistname = r'(.+) - (.+)'
+            regex_full = AUDIOS_FILENAME_REGEX
+
+            log.debug('Fetching tracklist for filename correction...')
+
+            filenames = [get_filename(i) for i in os.listdir(path)]
+            renamed_count = 0
+
+            for i, filename in enumerate(filenames):
+                if re.match(regex_full, filename):
+                    renamed = False
+                elif re.match(regex_artistname, filename):
+                    renamed = intpadding(i)+' - '+filename
+                    log.info('Assumed "'+filename+'" is of format <artist> - <track>')
+                else :
+                    renamed = intpadding(i)+' - '+artist+' - '+filename
+                    log.info('Assumed "'+filename+'" is of format <track>')
+                if renamed: 
+                    log.info('Renaming '+filename+' to '+renamed)
+                    try: 
+                        os.rename(path+filename, path+renamed)
+                        renamed_count+=1
+                    except: 
+                        log.error(f'Failed to rename {filename} to {renamed}.')
+                        error_count+=1
+
+            if renamed_count > 0:
+                log.success(f'Renamed {renamed_count} file(s) successfully.')
+                if error_count > 0: log.warn(f'Failed to rename {error_count} files')
+            else:
+                log.info('All files were already named correctly.')
 
     class Video:
         def __init__(self, parentself):
@@ -67,8 +99,11 @@ class Track:
                 return os.listdir(self.parent.folders.video)
             else:
                 log.error('Music videos directory does not exist, creating one...')
-                os.mkdir(self.parent.folders.video)
-                log.success(f'Directory "{self.parent.folders.video}" created')
+                try:
+                    os.mkdir(self.parent.folders.video)
+                    log.success(f'Directory "{self.parent.folders.video}" created')
+                except:
+                    log.error(f'Failed to create directory:\n{self.parent.folders.video}')
                 return []
 
         def missing(self, retunstyle='path'):

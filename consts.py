@@ -13,12 +13,12 @@ COVERS_FILENAME_REGEX = r'(.+) cover art (.+)\.png'
 VIDEOS_COVERART_FORMAT_USED = 'landscape'
 BASEPATH['videos'] = 'D:/Users/ewenl/Desktop/GRAPHISM/Mx3 YT/'
 VIDEOS_FILENAME_SCHEME = '[artist] - [track].mp4'
-VIDEOS_FILENAME_REGEX = r'(.+) - (.+)\.mp4'
+VIDEOS_FILENAME_REGEX = r'(.+) - (.+)\.\w{3,}'
 
 # Audio file consts
 BASEPATH['audios'] = 'D:/Users/ewenl/Documents/Image-Line/Data/FL Studio/Projects/#DONE/'
 AUDIOS_FILENAME_SCHEME = '[tracknumber] - [artist] - [track].mp3'
-AUDIOS_FILENAME_REGEX = r'((\d{2,}) - )?(.+) - (.+)\.mp3'
+AUDIOS_FILENAME_REGEX = r'(\d{2,}) - (.+) - (.+)\.\w{3,}$'
 
 # === FIELDS ===
 # Common to [artist], [track] and [collection]
