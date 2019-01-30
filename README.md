@@ -6,9 +6,10 @@ A script to automate the tedious process of getting music out.
 ## Processing
 
 ### INPUTS
-- Title ¤
 - Filename
-- Collection name (if it is) ¤
+- Artist (`SELF_NAME` by default)
+- Track type (album, ep, remix or single)
+- Collection name ¤
 - Description ¤
   - French
   - English
