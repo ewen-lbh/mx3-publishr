@@ -1,5 +1,5 @@
 userdata = {
-    'type' : 'album',
+    'kind' : 'album',
     'artist' : 'Mx3',
     'collection' : 'Etymology',
 }

@@ -13,6 +13,9 @@ import numpy          as np
 import moviepy.editor as mp
 
 class Track:
+
+    
+
     def __init__(self, data):
         for k,v in data.items():
             setattr(self,k,v)
@@ -28,6 +31,10 @@ class Track:
             self.parent = parentself
             for k in BASEPATHS:
                 setattr(self, k, BASEPATHS[k]+'/'+str(self.parent.collection)+'/')
+
+
+
+
     class Cover:
         def __init__(self, parentself):
             # inherit parentself as a parent object
@@ -36,6 +43,8 @@ class Track:
             scheme = FILENAME_SCHEMES['covers']
             return scheme.replace(f'[format]', str(format)).replace(f'[collection]', str(self.parent.collection))
         
+
+
 
     class Audio:
         def __init__(self, parentself):
@@ -49,7 +58,7 @@ class Track:
             return scheme
         
         def list(self, returnstyle='path'):
-            has_multiple_tracks = (self.parent.tracktype in COLLECTION_TYPES)
+            has_multiple_tracks = (self.parent.kind in COLLECTION_TYPES)
             if has_multiple_tracks:
                 if os.path.isdir(self.parent.folders.audios):
                     log.debug('Fetching track list...')
@@ -69,7 +78,7 @@ class Track:
                     log.fatal('No folder for audio files found.')
                     return False
             else:
-                log.warn('The '+self.parent.tracktype+' shouldn\'t have multiple tracks.\n   This may cause errors. The script will continue as if the tracklist was not found.')
+                log.warn('The '+self.parent.kind+' shouldn\'t have multiple tracks.\n   This may cause errors. The script will continue as if the tracklist was not found.')
                 return False
         def rename(self):
             regex_artistname = r'(.+) - (.+)'
@@ -103,6 +112,12 @@ class Track:
                 if error_count > 0: log.warn(f'Failed to rename {error_count} files')
             else:
                 log.info('All files were already named correctly.')
+
+
+
+
+
+
 
     class Video:
         def __init__(self, parentself):
