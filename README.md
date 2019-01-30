@@ -7,7 +7,7 @@ A script to automate the tedious process of getting music out.
 
 ### INPUTS
 - Filename
-- Artist (`SELF_NAME` by default)
+- Artist (`SELF_NAME` by default) ¤
 - Track type (album, ep, remix or single)
 - Collection name ¤
 - Description ¤
