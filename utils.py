@@ -1,6 +1,8 @@
 import re
 from consts import *
 
+# === Formatting ===
+# sentence case 
 def sentence(string):
         # split by words
         letters = list(string)
@@ -16,6 +18,39 @@ def sentence(string):
         else:
             return first_letter
 
+def intpadding(value, strsize=2):
+    return_value  = str(value)
+    zeroes_to_add = strsize - len(return_value)
+    if zeroes_to_add >= 1:
+        for i in range(zeroes_to_add):
+            return_value = '0'+return_value
+    return return_value
+
+# === Core ===
+def switch(data, key):
+    return data[key]
+
+# === Primitives handling ===
+def is_primitive(var):
+    return type(var) in PRIMITIVE_TYPES
+
+def get_primitive_vars(obj):
+    props = vars(obj)
+    primitives = {}
+    for key, value in props.items():
+        if is_primitive(value): primitives[key] = value
+    return primitives
+
+# === Filename manipulation ===
+def addext(filename, ext):
+    return f'{filename}.{ext}'
+
+def rmext(filename):
+    return re.sub(r'(\.\w+)','',filename)
+
+def chext(filename, newext):
+    return addext(rmext(filename), newext)
+
 def truncate(string, max_length, append=''):
     if len(string) > max_length:
         return string[:max_length] + append
@@ -28,14 +63,3 @@ def filename(path):
 # get tracknumber from file name
 def tracknumber(filename):
     return re.sub(AUDIOS_FILENAME_REGEX, r'\1',filename)
-
-def intpadding(value, strsize=2):
-    return_value  = str(value)
-    zeroes_to_add = strsize - len(return_value)
-    if zeroes_to_add >= 1:
-        for i in range(zeroes_to_add):
-            return_value = '0'+return_value
-    return return_value
-
-def switch(data, key):
-    return data[key]

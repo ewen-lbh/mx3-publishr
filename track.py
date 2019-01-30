@@ -1,14 +1,21 @@
 # import as globals
-from utils  import *
-from cli    import *
-from consts import *
+from utils       import *
+from cli         import *
+from consts      import *
+from pprint      import pprint
+from PIL         import Image
+from mutagen.mp3 import MP3
+from shutil      import copyfile
+
 # import as objects
 import os
+import numpy          as np
+import moviepy.editor as mp
 
 class Track:
     def __init__(self, data):
-        for k,v in enumerate(data):
-            setattr(self,v,k)
+        for k,v in data.items():
+            setattr(self,k,v)
         self.rawdata = data
         self.folders = self.Folders(self)
         self.cover = self.Cover(self)
@@ -25,6 +32,9 @@ class Track:
         def __init__(self, parentself):
             # inherit parentself as a parent object
             self.parent = parentself
+        def format(self, format):
+            scheme = FILENAME_SCHEMES['covers']
+            return scheme.replace(f'[format]', str(format)).replace(f'[collection]', str(self.parent.collection))
         
 
     class Audio:
@@ -32,19 +42,24 @@ class Track:
             # inherit parentself as a parent object
             self.parent = parentself
         
+        def format(self, **kwargs):
+            scheme = FILENAME_SCHEMES['audios']
+            for k, v in kwargs.items():
+                scheme = scheme.replace(f'[{k}]', str(v))
+            return scheme
+        
         def list(self, returnstyle='path'):
             has_multiple_tracks = (self.parent.tracktype in COLLECTION_TYPES)
             if has_multiple_tracks:
-                audiofolder_path = get_resource_path('audiofolder', self.parent.collection)
-                if os.path.isdir(audiofolder_path):
+                if os.path.isdir(self.parent.folders.audios):
                     log.debug('Fetching track list...')
-                    fileslist = os.listdir(audiofolder_path)
+                    fileslist = os.listdir(self.parent.folders.audios)
                     tracklist = []
                     for f in fileslist:
                         fname, fext = os.path.splitext(f)
                         # TODO conversion from wav to mp3
                         tracklist.append(switch({
-                            'path'   : audiofolder_path+f,
+                            'path'   : self.parent.folders.audios+f,
                             'relpath': f,
                             'name'   : fname,
                             'ext'    : fext
@@ -95,16 +110,22 @@ class Track:
             self.parent = parentself  
         
         def list(self, returnstyle="path"):
-            if os.isdir(self.parent.folders.video):
-                return os.listdir(self.parent.folders.video)
+            if os.isdir(self.parent.folders.videos):
+                return os.listdir(self.parent.folders.videos)
             else:
                 log.error('Music videos directory does not exist, creating one...')
                 try:
-                    os.mkdir(self.parent.folders.video)
-                    log.success(f'Directory "{self.parent.folders.video}" created')
+                    os.mkdir(self.parent.folders.videos)
+                    log.success(f'Directory "{self.parent.folders.videos}" created')
                 except:
-                    log.error(f'Failed to create directory:\n{self.parent.folders.video}')
+                    log.error(f'Failed to create directory:\n{self.parent.folders.videos}')
                 return []
+
+        def format(self, **kwargs):
+            scheme = FILENAME_SCHEMES['videos']
+            for k, v in kwargs.items():
+                scheme = scheme.replace(f'[{k}]', str(v))
+            return scheme
 
         def missing(self, retunstyle='path'):
             log.info('Getting missing videos...')
@@ -125,5 +146,26 @@ class Track:
                 missing_vids_str = '\n'.join(missing_vids)
                 log.info(f'Missing {len(missing_vids)} video(s):{missing_vids_str}')
                 return missing_vids
-            
 
+        def create(self, trackname):
+            filename = self.parent.
+
+            log.debug('Getting duration from the audio file...')
+            # Get length of video from the audio file
+            duration = MP3(audio).info.length
+            log.debug('Audio file duration : '+str(duration)+' seconds')
+            duration = int(np.ceil(duration))
+            log.debug('Future video duration : '+str(duration)+' seconds')
+
+            log.debug('Getting audio data...')
+            audio = mp.AudioFileClip(audio)
+            log.debug('Getting image data...')
+            image = mp.ImageClip(img, duration=duration)
+
+            log.debug('Combining image and audio...')
+            video = image.set_audio(audio)
+
+            log.info('Writing file to "'+filename+'" with 30 fps...')
+            video.write_videofile(self.parent.folders.videos+filename, fps=30, codec='libx264')
+            log.success('Done!')
+                

@@ -1,7 +1,10 @@
-from cli import *
-import consts
-from utils import *
+# import as globals
+from utils  import *
+from cli    import *
+from consts import *
 from pprint import pprint
+# import as objects
+# ...
 
 log.watermark()
 

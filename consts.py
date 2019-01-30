@@ -1,23 +1,27 @@
+# === CORE ===
+PRIMITIVE_TYPES = (int, str, bool, float, dict, set, list)
+
 # === ENV ===
 # set to 'prod' when using the script normally.
 ENV = 'dev'
 
 # === FILES ===
 BASEPATHS = {}
+FILENAME_SCHEMES = {}
 # Cover art consts
-BASEPATH['covers'] = 'D:/Users/ewenl/Desktop/GRAPHISM/Sync/Covers/'
-COVERS_FILENAME_SCHEME = '[collection] cover art ([format]).png'
+BASEPATHS['covers'] = 'D:/Users/ewenl/Desktop/GRAPHISM/Sync/Covers/'
+FILENAME_SCHEMES['covers'] = '[collection] cover art ([format]).png'
 COVERS_FILENAME_REGEX = r'(.+) cover art (.+)\.png'
 
 # Music videos consts
 VIDEOS_COVERART_FORMAT_USED = 'landscape'
-BASEPATH['videos'] = 'D:/Users/ewenl/Desktop/GRAPHISM/Mx3 YT/'
-VIDEOS_FILENAME_SCHEME = '[artist] - [track].mp4'
+BASEPATHS['videos'] = 'D:/Users/ewenl/Desktop/GRAPHISM/Mx3 YT/'
+FILENAME_SCHEMES['videos'] = '[artist] - [track].mp4'
 VIDEOS_FILENAME_REGEX = r'(.+) - (.+)\.\w{3,}'
 
 # Audio file consts
-BASEPATH['audios'] = 'D:/Users/ewenl/Documents/Image-Line/Data/FL Studio/Projects/#DONE/'
-AUDIOS_FILENAME_SCHEME = '[tracknumber] - [artist] - [track].mp3'
+BASEPATHS['audios'] = 'D:/Users/ewenl/Documents/Image-Line/Data/FL Studio/Projects/#DONE/'
+FILENAME_SCHEMES['audios'] = '[tracknumber] - [artist] - [track].mp3'
 AUDIOS_FILENAME_REGEX = r'(\d{2,}) - (.+) - (.+)\.\w{3,}$'
 
 # === FIELDS ===
