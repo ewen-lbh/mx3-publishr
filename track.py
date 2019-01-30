@@ -14,9 +14,14 @@ import moviepy.editor as mp
 
 class Track:
     def __init__(self, data):
+        # default value
+        self.artist = SELF_NAME
+
         for k,v in data.items():
             setattr(self,k,v)
+
         self.rawdata = data
+        # subclasses definitions
         self.folders = self.Folders(self)
         self.cover = self.Cover(self)
         self.audio = self.Audio(self)
@@ -47,6 +52,22 @@ class Track:
             for k, v in kwargs.items():
                 scheme = scheme.replace(f'[{k}]', str(v))
             return scheme
+
+        def get(self, what, filename):
+
+            if re.match(FILENAME_REGEX['audios'], filename):
+                if what == 'artist':
+                    regex_group = 2
+                elif what == 'track':
+                    regex_group = 3
+                elif what == 'tracknumber':
+                    regex_group = 1
+                else:
+                    log.error(f'Audio.get(): Unknown property "{what}"')
+            else:
+                # :\n{FILENAME_SCHEMES['audios']} at the end of log (doesnt work)
+                log.error(f'Audio.get(): Filename "{filename}" doesn\'t match the pattern required')
+
         
         def list(self, returnstyle='path'):
             has_multiple_tracks = (self.parent.kind in COLLECTION_TYPES)
@@ -77,14 +98,14 @@ class Track:
 
             log.debug('Fetching tracklist for filename correction...')
 
-            filenames = [get_filename(i) for i in os.listdir(path)]
+            filenames = [filename(i) for i in os.listdir(path)]
             renamed_count = 0
 
             for i, filename in enumerate(filenames):
                 if re.match(regex_full, filename):
                     renamed = False
                 elif re.match(regex_artistname, filename):
-                    renamed = intpadding(i)+' - '+filename
+                    renamed = self.format(artist=self.parent.artist, track=self.get('track'))
                     log.info('Assumed "'+filename+'" is of format <artist> - <track>')
                 else :
                     renamed = intpadding(i)+' - '+artist+' - '+filename
@@ -103,6 +124,9 @@ class Track:
                 if error_count > 0: log.warn(f'Failed to rename {error_count} files')
             else:
                 log.info('All files were already named correctly.')
+        
+        def filename_by_trackname(self, trackname):
+            
 
     class Video:
         def __init__(self, parentself):
@@ -123,6 +147,7 @@ class Track:
 
         def format(self, **kwargs):
             scheme = FILENAME_SCHEMES['videos']
+            artist = kwargs['artist'] or self.parent.artist
             for k, v in kwargs.items():
                 scheme = scheme.replace(f'[{k}]', str(v))
             return scheme
@@ -148,7 +173,8 @@ class Track:
                 return missing_vids
 
         def create(self, trackname):
-            filename = self.parent.
+            filename = self.parent.video.format(artist=self.parent.artist, track=trackname)
+            audio = self.parent.audio.format()
 
             log.debug('Getting duration from the audio file...')
             # Get length of video from the audio file
