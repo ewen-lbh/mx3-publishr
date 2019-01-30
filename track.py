@@ -49,7 +49,7 @@ class Track:
             return scheme
         
         def list(self, returnstyle='path'):
-            has_multiple_tracks = (self.parent.tracktype in COLLECTION_TYPES)
+            has_multiple_tracks = (self.parent.kind in COLLECTION_TYPES)
             if has_multiple_tracks:
                 if os.path.isdir(self.parent.folders.audios):
                     log.debug('Fetching track list...')
@@ -69,7 +69,7 @@ class Track:
                     log.fatal('No folder for audio files found.')
                     return False
             else:
-                log.warn('The '+self.parent.tracktype+' shouldn\'t have multiple tracks.\n   This may cause errors. The script will continue as if the tracklist was not found.')
+                log.warn('The '+self.parent.kind+' shouldn\'t have multiple tracks.\n   This may cause errors. The script will continue as if the tracklist was not found.')
                 return False
         def rename(self):
             regex_artistname = r'(.+) - (.+)'

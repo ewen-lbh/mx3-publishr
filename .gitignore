@@ -2,3 +2,5 @@ __pycache__/*
 .gitattributes
 **/*.secure.py
 playground.py
+*.code-snippets
+*vscode*
