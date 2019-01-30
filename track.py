@@ -87,7 +87,8 @@ class Track:
                     audios = [filename(i) for i in tracklist]
 
                 missing_vids = list(set(audios) - set(videos))
-                log.info(f'Missing {len(missing_vids)} video(s):\n{'\n'.join(missing_vids)}')
+                missing_vids_str = '\n'.join(missing_vids)
+                log.info(f'Missing {len(missing_vids)} video(s):{missing_vids_str}')
                 return missing_vids
             
 
