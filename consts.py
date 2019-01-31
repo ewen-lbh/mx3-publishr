@@ -75,7 +75,7 @@ AUTO_ADD_SINGLE_SUFFIX = False
 SPECIAL_CHARS_COMPATIBILITY_LEVEL = 1
 
 # Verbose output: show debug logs (log.debug methods)
-VERBOSE_OUTPUT = False
+VERBOSE_OUTPUT = True
 
 # --- Special chars ---
 SPECIAL_CHARS = {}

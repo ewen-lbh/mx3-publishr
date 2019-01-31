@@ -17,7 +17,7 @@ class Audio:
         else:
             log.fatal(f"Can't find the audio files directory:\n{self.parent.dirs.audio}")
         
-        switch(what, {
+        return switch(what, {
             'paths': paths,
             'filenames' : [filename(i) for i in paths],
             'names' : [rmext(filename(i)) for i in paths]
@@ -27,9 +27,9 @@ class Audio:
     def __init__(self, parentself):
         self.parent = parentself
         self.lists = {}
-        self.lists['paths'] = self.fetch_tracks('paths', silent=True)
-        self.lists['filenames'] = self.fetch_tracks('filenames', silent=True)
-        self.lists['names'] = self.fetch_tracks('names', silent=True)
+        self.lists['paths'] = self.fetch_tracks('paths')
+        self.lists['filenames'] = [filename(i) for i in self.lists['paths']]
+        self.lists['names'] = [rmext(i) for i in self.lists['filenames']]
 
     
         
