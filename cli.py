@@ -22,13 +22,13 @@ class log:
     def watermark():
         print(WATERMARK)
 
-    def fatal(text, errmsg=None, exit_script=True):
+    def fatal(text='Internal Error', errmsg=None, exit_script=True):
         log.log(text, 'fatal')
         if exit_script:
             # if errmsg isn't provided, get it from the text,
             # but remove linebreaks, and add ellipsis if too long
             if errmsg is None: errmsg = truncate(
-                text.replace('\\n', ' '), 20, '...')
+                text.replace('\\n', ' '), 50, '...')
             raise SystemExit(errmsg)
 
     def debug(text):
@@ -53,13 +53,40 @@ class ask:
         answer = ask.anything(text)
         while answer not in choices:
             log.error('"'+answer+'" is not a valid answer, retrying...')
-            answer = ask.anything()
+            answer = ask.anything(text)
         return answer
 
     @staticmethod
     def confirm(text):
         answer = ask.choices(text, ['y', 'n'])
         return answer == 'y'
+
+    @staticmethod
+    def userdata():
+        userdata = {}
+        # --- TRACK TYPE ---
+        userdata['type'] = ask.choices('Please enter the kind of track you want to publish',AVAIL_KINDS)
+        
+        # --- GETTING ARTIST ---
+        if AUTO_DETECT_OC:
+            is_oc = userdata['type'] != 'remix'
+        else:
+            # Ask if the artist != SELF_NAME (dont ask if its a remix, obviously)
+            if userdata['type'] != 'remix':
+                is_oc = ask.confirm('Did you ('+SELF_NAME+') created this from scratch ?')
+            else:
+                is_oc = False
+
+        # If the artist isn't SELF_NAME, ask for it:
+        if is_oc:
+            userdata['artist'] = SELF_NAME
+        else:
+            userdata['artist'] = ask.anything('Who did the original track ?')
+            
+        # --- COLLECTION NAME ---
+        userdata['collection'] = ask.anything('Please enter the '+userdata['type']+' name')
+
+        return userdata
 
 
 # add missing log variants from LOG_TYPES if not defined yet

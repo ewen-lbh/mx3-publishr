@@ -27,8 +27,10 @@ def intpadding(value, strsize=2):
     return return_value
 
 # === Core ===
-def switch(data, key):
-    return data[key]
+def switch(var, binding):
+    for key, value in binding.items():
+        if var == key: return value
+    return None
 
 # === Primitives handling ===
 def is_primitive(var):
