@@ -70,3 +70,21 @@ nothing means implicitly fetched with predetermined paths & filenaming schemes
 ### NAMING SCHEMES
 - Cover arts : \<collection\> cover art (\<landscape|square\>).png
 - Songs/Videos filenames : \<artist\> - \<trackname\>.\<mp3|wav\>
+
+# Commit naming convention
+```<type>(<scope>): <subject>
+<NEWLINE>
+<description>
+<NEWLINE>
+<footer>
+```
+### types:
+- feat: new feature
+- docs: documentation
+- fix : bug fixed
+- refactor: refactoring (changing code without affecting functionnality)
+- style: minor refactoring, for code style only (eg. changed variable name, use objects instead of dicts...)
+- dep: dependencies add/remove dependencides
+- conf: changing config files
+- ui: fixing typos or improving CLI/GUI
+- misc: this should eventually go away, it stays while I define other types I need.
