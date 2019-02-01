@@ -87,4 +87,5 @@ nothing means implicitly fetched with predetermined paths & filenaming schemes
 - dep: dependencies add/remove dependencides
 - conf: changing config files
 - ui: fixing typos or improving CLI/GUI
+- log: add/remove logging
 - misc: this should eventually go away, it stays while I define other types I need.
