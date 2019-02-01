@@ -157,8 +157,6 @@ def _list_logvariants():
         logvariants += f'             - "{v}{LOG_TYPE_SEPARATOR}" {k}\n'
     return logvariants
 
-# TODO move this out of consts
-# TODO use pyfiglet instead of harcoded logos
 WATERMARK = """
 
    `::::::::::::::::::.                      -:::::::::::::::::-`       
