@@ -3,6 +3,15 @@ from cli import *
 import os
 
 class Audio:
+    def get(self, what, name):
+        repl_group = {
+            'tracknumber' : r'\1',
+            'artist' : r'\2',
+            'track' : r'\3',
+            'name' : r'\3'
+        }
+        return re.sub(AUDIOS_FILENAME_REGEX, repl_group[what], name)
+
     def fetch_tracks(self, what, **options):
         log.debug(f'Checking existence of directory "{self.parent.dirs.audio}"...')
 
@@ -23,13 +32,13 @@ class Audio:
             'names' : [rmext(filename(i)) for i in paths]
         })
 
-    def rename(self, filename):
+    def rename(self):
         regex_artistname = r'(.+) - (.+)'
         regex_full = r'(\d{2,}) - (.+) - (.+)'
 
-        log.info('Fetching tracklist for filename correction...')
+        log.debug('Fetching tracklist for filename correction...')
 
-        filenames = [filename(i) for i in os.listdir(path)]
+        filenames = os.listdir(self.parent.dirs.audio)
         renamed_count = 0
 
         for i, filename in enumerate(filenames):
@@ -37,10 +46,10 @@ class Audio:
                 renamed = False
             elif ask.confirm(f'File {filename} is not in a good format. Do you want to rename it automatically ?'):
                 if re.match(regex_artistname, filename):
-                    renamed = intpadding(i)+' - '+filename
+                    renamed = intpadding(i+1)+' - '+filename
                     log.warn('Assumed "'+filename+'" is of format <artist> - <track>')
                 else:
-                    renamed = intpadding(i)+' - '+artist+' - '+filename
+                    renamed = intpadding(i+1)+' - '+artist+' - '+filename
                     log.warn('Assumed "'+filename+'" is of format <track>')
                 if renamed: 
                     log.debug('Renaming '+filename+' to '+renamed)
