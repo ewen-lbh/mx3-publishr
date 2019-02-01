@@ -90,4 +90,5 @@ nothing means implicitly fetched with predetermined paths & filenaming schemes
 - ui: fixing typos or improving CLI/GUI
 - log: add/remove logging
 - struct: structural/organizational changes, not big enough to be considered a refactoring.
+- prep: Addition of classes/methods/functions/stuff in anticipation for future features
 - misc: this should eventually go away, it stays while I define other types I need.
