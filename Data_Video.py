@@ -1,6 +1,7 @@
 from imports import *
 from mutagen.mp3 import MP3
 import moviepy.editor as mp
+import time
 
 class Video:
     def __init__(self, parentself):
