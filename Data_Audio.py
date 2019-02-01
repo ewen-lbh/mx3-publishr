@@ -18,7 +18,7 @@ class Audio:
         if os.path.isdir(self.parent.dirs.audio):
             log.debug('Fetching files in directory...')
             try:
-                paths = [BASEPATHS['audio']+i for i in os.listdir(self.parent.dirs.audio)]
+                paths = [self.parent.dirs.audio+i for i in os.listdir(self.parent.dirs.audio)]
                 log.debug('Fetched files successfully')
                 if not 'silent' in options: log.success(f'{len(paths)} track(s) found!')
 
