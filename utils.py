@@ -67,7 +67,7 @@ def truncate(string, max_length, append=''):
         return string
 
 def filename(path):
-    return re.sub(r'(?:(?:.+)\/)+([^\/]+)\.\w{3}$',r'\1',path)
+    return re.sub(r'(?:(?:.+)\/)+([^\/]+\.\w{3})$',r'\1',path)
 
 # get tracknumber from file name
 def tracknumber(filename):
