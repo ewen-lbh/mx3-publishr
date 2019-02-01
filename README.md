@@ -68,7 +68,7 @@ nothing means implicitly fetched with predetermined paths & filenaming schemes
 - Database operations
 - CLI Progress bars ?
 - Regex
-- FTP
+- FTP (or SSH ?)
 - WAV to MP3 conversion
 
 ### NAMING SCHEMES
