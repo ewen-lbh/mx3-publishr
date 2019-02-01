@@ -89,4 +89,5 @@ nothing means implicitly fetched with predetermined paths & filenaming schemes
 - conf: changing config files
 - ui: fixing typos or improving CLI/GUI
 - log: add/remove logging
+- struct: structural/organizational changes, not big enough to be considered a refactoring.
 - misc: this should eventually go away, it stays while I define other types I need.
