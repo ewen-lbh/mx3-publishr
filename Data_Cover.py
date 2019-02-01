@@ -1,4 +1,9 @@
 from consts import *
+from utils import *
+from cli import *
+import os
+from PIL import Image
+import numpy as np
 
 class Cover:
     def __init__(self, parentself):
@@ -18,7 +23,7 @@ class Cover:
     def make_square(self, direction='center'):
         im = Image.open(self.get('landscape'))
         w, h = im.size   # Get dimensions
-        log.debug("Image dimensions:",w,"by",h)
+        log.debug(f"Image dimensions:{w} by {h}")
         neww = np.floor(w/2)
         newh = h
         if w != 1920 or h != 1080:
@@ -47,6 +52,10 @@ class Cover:
 
         log.debug("Cropping "+direction_msg+'...')
 
-        im.crop((left,bottom,right,top)).save(destination)
+        im.crop((left,bottom,right,top)).save(self.get('cover'))
 
-        log.info("Square cover art successfully created.")
+        log.success("Square cover art successfully created.")
+    
+    def exists(self, what):
+        log.debug(f'Checking existence of file {self.get(what)}')
+        return os.path.isfile(self.get(what))

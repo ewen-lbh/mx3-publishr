@@ -58,17 +58,20 @@ class ask:
 
     @staticmethod
     def choices(text, choices, **options):
-        if shortcuts in options:
-            choices = [i[1] for i in choices]
 
         choicestr = '/'.join(choices)
-        text += '\n('+choicestr+')'
 
-        if shortcuts in options: text += ', you can use only the first letter to make your choice'
+        if 'shortcuts' in options:
+            choices = [i[0] for i in choices]
+
+
+        if 'shortcuts' in options: text += f'\nyou can use only the first letter to make your choice, eg. "{choices[0][0]}"'
+            
+        text += '\n('+choicestr+')'
 
         answer = ask.anything(text)
 
-        if shortcuts in options: answer = answer[1]
+        if 'shortcuts' in options: answer = answer[0]
 
         while answer not in choices:
             log.error('"'+answer+'" is not a valid answer, retrying...')

@@ -35,3 +35,14 @@ else:
 
 # make new object with userdata (when its confirmed correct by user)
 track = Data(userdata)
+
+# getting cover arts
+if not track.cover.exists('landscape'): log.fatal('Landscape cover art not found')
+
+if not track.cover.exists('square'):
+    log.warn('Square cover art not found.\nCropping the landscape version to make a square one...')
+    crop_direction = ask.choices('What part of it do you want to keep ?',['left','center','right'], shortcuts=True)
+    track.cover.make_square(crop_direction)
+    del crop_direction
+else:
+    log.info('All cover art versions (square and landscape) found !')
