@@ -26,6 +26,13 @@ def intpadding(value, strsize=2):
             return_value = '0'+return_value
     return return_value
 
+# replace "<placeholder>" with value
+def scheme(scheme, data):
+    for placeholder, value in data.items():
+        scheme = scheme.replace(f'<{placeholder}>', str(value))
+    return scheme
+
+
 # === Core ===
 def switch(var, binding):
     for key, value in binding.items():
