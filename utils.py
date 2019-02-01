@@ -32,6 +32,19 @@ def scheme(scheme, data):
         scheme = scheme.replace(f'[{placeholder}]', str(value))
     return scheme
 
+def sql_query_scheme(data):
+    scheme = DB_QUERY_SCHEME.replace('[keys]', ', '.join(data.keys()))
+    scheme = scheme.replace('[values]', ', '.join(data.values()))
+    return scheme
+
+def sql_get_query(data):
+    data_scheme = DB_FIELDS_SCHEMES
+    for key, placeholder in data_scheme.items():
+        data_scheme[key] = scheme(placeholder, data)
+    return sql_query_scheme(data_scheme)
+    
+
+
 # takes seconds to turn them into HH:mm:ss
 # credit: https://arcpy.wordpress.com/2012/04/20/146/
 def duration_format(sec_elapsed):
