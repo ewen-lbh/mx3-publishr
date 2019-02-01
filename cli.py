@@ -46,6 +46,11 @@ class log:
         if VERBOSE_OUTPUT:
             log.log(text, 'debug')
 
+    @staticmethod
+    def new_step(char='', count=4):
+        for i in range(count):
+            print(char)
+
 
 class ask:
     @staticmethod
@@ -60,13 +65,14 @@ class ask:
     def choices(text, choices, **options):
 
         choicestr = '/'.join(choices)
-
+        
         if 'shortcuts' in options:
+            orig_choices = choices
             choices = [i[0] for i in choices]
 
 
         if 'shortcuts' in options: text += f'\nyou can use only the first letter to make your choice, eg. "{choices[0][0]}"'
-            
+
         text += '\n('+choicestr+')'
 
         answer = ask.anything(text)
@@ -76,8 +82,9 @@ class ask:
         while answer not in choices:
             log.error('"'+answer+'" is not a valid answer, retrying...')
             answer = ask.anything(text)
-        return answer
 
+        if 'shortcuts' in options: answer = search_with_nth_char(orig_choices, answer)[1]
+        return answer
     @staticmethod
     def confirm(text):
         answer = ask.choices(text, ['y', 'n'])
