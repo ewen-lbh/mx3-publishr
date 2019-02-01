@@ -112,12 +112,19 @@ def _list_logvariants():
 # TODO move this out of consts
 # TODO use pyfiglet instead of harcoded logos
 WATERMARK = """
-                      __  __  __  __  _____   _       
-                     |  \/  | \ \/ / |___ /  ( )  ___ 
-                     | |\/| |  \  /    |_ \  |/  / __|
-                     | |  | |  /  \   ___) |     \__ \\
-                     |_|  |_| /_/\_\ |____/      |___/                                                               
-
+                                                                                                        +NNNNNNNNNNNm. -s:     `/o.`hNNNNNNNNNNNy     
+         `::::::::::::::::::.                      -:::::::::::::::::-`       
+         -NNNNNNNNNNNNNNNNNNs  `:yy-        `/ys. `yNNNNNNNNNNNNNNNMMd.       
+         -MMMdyyyNMMNhyydMMMy  :dMMNy-    `/hNMNy.`+yyyyyyydMMMMMMMMMm-       
+         -MMMs  `yMMm-  -NMMs   .sNMMNs-`:yNMMd+.          `+dMMMMMMMm-       
+         -MMMy` `yMMm-  -NMMs     .sNMMNdNMMd+.   `/+++++++++odMMMMMMm-       
+         -MMMMh:`yMMm-  -NMMs       -dMMMMMy.     `yMMMMMMMMMMMMMMMMMm-       
+         -MMMMMNhdMMm-  -NMMs     `:yNMMNMMNs.     :oooooooooooooomMMm-       
+         -MMMMMMMMMMm-  -NMMs   `:yNMMdo:sNMMNs.                 `yMMm-       
+         -MMMMMMMMMMN+  -NMMs  -yNMMmo.   -yNMMmo``+sssssssssssssymMMm-       
+         -NMMMMMMMMMMNy--NMMs  .smmo-       -yNd+``yMMMMMMMMMMMMMMMMMm-       
+         `:////////////:.://-    ..           ..   -/////////////////:`       
+                                                                                                                                                                
 .______    __    __  .______    __       __       _______. __    __  .______      
 |   _  \  |  |  |  | |   _  \  |  |     |  |     /       ||  |  |  | |   _  \     
 |  |_)  | |  |  |  | |  |_)  | |  |     |  |    |   (----`|  |__|  | |  |_)  |    

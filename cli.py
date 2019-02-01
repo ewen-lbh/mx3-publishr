@@ -19,9 +19,19 @@ class log:
             msg += '\n'+indent+line
         print(msg)
 
+    @staticmethod
     def watermark():
         print(WATERMARK)
 
+    @staticmethod
+    def recap(userdata):
+        msg = "To recap, here's all the information you gave..."
+        for prop, val in userdata.items():
+            msg += f"\n{prop.title()}: {truncate(val, 30)}"
+        log.info(msg)
+
+
+    @staticmethod
     def fatal(text='Internal Error', errmsg=None, exit_script=True):
         log.log(text, 'fatal')
         if exit_script:
@@ -31,6 +41,7 @@ class log:
                 text.replace('\\n', ' '), 50, '...')
             raise SystemExit(errmsg)
 
+    @staticmethod
     def debug(text):
         if VERBOSE_OUTPUT:
             log.log(text, 'debug')

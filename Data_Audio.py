@@ -3,15 +3,15 @@ from cli import *
 import os
 
 class Audio:
-    def fetch_tracks(self, what, **kwargs):
+    def fetch_tracks(self, what, **options):
         log.debug(f'Checking existence of directory "{self.parent.dirs.audio}"...')
 
         if os.path.isdir(self.parent.dirs.audio):
             log.debug('Fetching files in directory...')
             try:
-                paths = os.listdir(self.parent.dirs.audio)
+                paths = [BASEPATHS['audio']+i for i in os.listdir(self.parent.dirs.audio)]
                 log.debug('Fetched files successfully')
-                if not 'silent' in kwargs: log.success(f'{len(paths)} track(s) found!')
+                if not 'silent' in options: log.success(f'{len(paths)} track(s) found!')
 
             except: log.fatal(f"Couldn't open directory:\n{self.parent.dirs.audio}")
         else:
@@ -22,7 +22,6 @@ class Audio:
             'filenames' : [filename(i) for i in paths],
             'names' : [rmext(filename(i)) for i in paths]
         })
-
 
     def __init__(self, parentself):
         self.parent = parentself
