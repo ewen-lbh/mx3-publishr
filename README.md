@@ -71,7 +71,7 @@ nothing means implicitly fetched with predetermined paths & filenaming schemes
 
 ### NAMING SCHEMES
 - Cover arts : \<collection\> cover art (\<landscape|square\>).png
-- Songs/Videos filenames : \<artist\> - \<trackname\>.\<mp3|wav\>
+- Songs/Videos filenames : \<artist\> - \<trackname\>.\<mp3|mp4\>
 
 # Commit naming convention
 ```
