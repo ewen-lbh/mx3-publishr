@@ -9,27 +9,28 @@ import debugdata
 
 log.watermark()
 
-if ENV != 'dev':
-    log.fatal('Whoops! \nScript still in construction! \nCome back later!')
-
 # userdata collecting process
 def get_userdata():
     global userdata
     global userdata_confirmed
 
-    if not ask.confirm('Ask for data ?'):
-        userdata = debugdata.userdata
-    else:
-        userdata = ask.userdata()
+    # if not ask.confirm('Ask for data ?'):
+    #     userdata = debugdata.userdata
+    # else:
+    #     userdata = ask.userdata()
 
     log.recap(userdata)
 
     userdata_confirmed = ask.confirm('Is this information correct ?')
 
-# handle re-asking
-get_userdata()
-while not userdata_confirmed:
+if ENV == 'dev':
+    userdata = debugdata.userdata
+else:
+    # handle re-asking
     get_userdata()
+    while not userdata_confirmed:
+        get_userdata()
+
 
 # make new object with userdata (when its confirmed correct by user)
 track = Data(userdata)

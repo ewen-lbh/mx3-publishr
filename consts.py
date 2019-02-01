@@ -112,18 +112,18 @@ def _list_logvariants():
 # TODO move this out of consts
 # TODO use pyfiglet instead of harcoded logos
 WATERMARK = """
-                                                                                                        +NNNNNNNNNNNm. -s:     `/o.`hNNNNNNNNNNNy     
-         `::::::::::::::::::.                      -:::::::::::::::::-`       
-         -NNNNNNNNNNNNNNNNNNs  `:yy-        `/ys. `yNNNNNNNNNNNNNNNMMd.       
-         -MMMdyyyNMMNhyydMMMy  :dMMNy-    `/hNMNy.`+yyyyyyydMMMMMMMMMm-       
-         -MMMs  `yMMm-  -NMMs   .sNMMNs-`:yNMMd+.          `+dMMMMMMMm-       
-         -MMMy` `yMMm-  -NMMs     .sNMMNdNMMd+.   `/+++++++++odMMMMMMm-       
-         -MMMMh:`yMMm-  -NMMs       -dMMMMMy.     `yMMMMMMMMMMMMMMMMMm-       
-         -MMMMMNhdMMm-  -NMMs     `:yNMMNMMNs.     :oooooooooooooomMMm-       
-         -MMMMMMMMMMm-  -NMMs   `:yNMMdo:sNMMNs.                 `yMMm-       
-         -MMMMMMMMMMN+  -NMMs  -yNMMmo.   -yNMMmo``+sssssssssssssymMMm-       
-         -NMMMMMMMMMMNy--NMMs  .smmo-       -yNd+``yMMMMMMMMMMMMMMMMMm-       
-         `:////////////:.://-    ..           ..   -/////////////////:`       
+
+   `::::::::::::::::::.                      -:::::::::::::::::-`       
+   -NNNNNNNNNNNNNNNNNNs  `:yy-        `/ys. `yNNNNNNNNNNNNNNNMMd.       
+   -MMMdyyyNMMNhyydMMMy  :dMMNy-    `/hNMNy.`+yyyyyyydMMMMMMMMMm-       
+   -MMMs  `yMMm-  -NMMs   .sNMMNs-`:yNMMd+.          `+dMMMMMMMm-       
+   -MMMy` `yMMm-  -NMMs     .sNMMNdNMMd+.   `/+++++++++odMMMMMMm-       
+   -MMMMh:`yMMm-  -NMMs       -dMMMMMy.     `yMMMMMMMMMMMMMMMMMm-       
+   -MMMMMNhdMMm-  -NMMs     `:yNMMNMMNs.     :oooooooooooooomMMm-    _       
+   -MMMMMMMMMMm-  -NMMs   `:yNMMdo:sNMMNs.                 `yMMm-   ( )  ___ 
+   -MMMMMMMMMMN+  -NMMs  -yNMMmo.   -yNMMmo``+sssssssssssssymMMm-   |/  / __|
+   -NMMMMMMMMMMNy--NMMs  .smmo-       -yNd+``yMMMMMMMMMMMMMMMMMm-       \__ \\
+   `:////////////:.://-    ..           ..   -/////////////////:`       |___/   
                                                                                                                                                                 
 .______    __    __  .______    __       __       _______. __    __  .______      
 |   _  \  |  |  |  | |   _  \  |  |     |  |     /       ||  |  |  | |   _  \     
