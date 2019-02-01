@@ -33,10 +33,16 @@ else:
 # make new object with userdata (when its confirmed correct by user)
 log.new_step()
 track = Data(userdata)
+
+# rename tracks badly named
+track.audio.rename()
+
 # show fetched tracks
 tracklist = '\n'.join(track.audio.lists['names'])
-log.info(f"Tracklist:\n{tracklist}'")
+log.info(f"Tracklist:\n{tracklist}")
 del tracklist
+
+
 
 # getting cover arts
 log.new_step()
@@ -49,13 +55,18 @@ if not track.cover.exists('square'):
     track.cover.make_square(crop_direction)
     del crop_direction
 else:
-    log.info('All cover art versions (square and landscape) found !')
+    log.info('All cover art versions (square and landscape) found!')
 
 log.new_step()
-if False:
-    video_creation_confirmed = log.confirm('Want to generate videos automatically ? (this will take quite some time)')
+missing_vids = track.video.missing()
+if len(missing_vids) > 0:
+    pprint(missing_vids)
+    missing_vids_str = '\n'.join([chext(filename(i) ,'mp4') for i in missing_vids])
+    log.warn(f'Videos missing:\n{missing_vids_str}')
+    video_creation_confirmed = ask.confirm('Want to generate videos automatically ? (this will take quite some time)')
     if video_creation_confirmed:
-        track.video.make()
+        for filename in missing_vids:
+            track.video.create(filename)
     else:
         log.fatal('Action cancelled.')
 else:
