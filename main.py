@@ -25,6 +25,7 @@ def get_userdata():
 
 if ENV == 'dev':
     userdata = debugdata.userdata
+    log.recap(userdata)
 else:
     # handle re-asking
     get_userdata()
@@ -34,6 +35,3 @@ else:
 
 # make new object with userdata (when its confirmed correct by user)
 track = Data(userdata)
-
-
-pprint(track.audio.fetch_tracks('paths'))

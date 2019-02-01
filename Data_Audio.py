@@ -23,6 +23,37 @@ class Audio:
             'names' : [rmext(filename(i)) for i in paths]
         })
 
+    def rename(self, filename):
+        regex_artistname = r'(.+) - (.+)'
+        regex_full = r'(\d{2,}) - (.+) - (.+)'
+
+        log.info('Fetching tracklist for filename correction...')
+
+        filenames = [filename(i) for i in os.listdir(path)]
+        renamed_count = 0
+
+        for i, filename in enumerate(filenames):
+            if re.match(regex_full, filename):
+                renamed = False
+            elif ask.confirm(f'File {filename} is not in a good format. Do you want to rename it automatically ?'):
+                if re.match(regex_artistname, filename):
+                    renamed = intpadding(i)+' - '+filename
+                    log.warn('Assumed "'+filename+'" is of format <artist> - <track>')
+                else:
+                    renamed = intpadding(i)+' - '+artist+' - '+filename
+                    log.warn('Assumed "'+filename+'" is of format <track>')
+                if renamed: 
+                    log.debug('Renaming '+filename+' to '+renamed)
+                    os.rename(path+filename, path+renamed)
+                    renamed_count+=1
+            else:
+                log.fatal('User chose to close the script')
+
+        if renamed_count > 0:
+            log.success(f'Renamed {renamed_count} files successfully.')
+        else:
+            log.info('All files were named correctly. Good job !')
+
     def __init__(self, parentself):
         self.parent = parentself
         self.lists = {}
