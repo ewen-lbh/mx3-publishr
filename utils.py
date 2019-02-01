@@ -32,6 +32,14 @@ def scheme(scheme, data):
         scheme = scheme.replace(f'[{placeholder}]', str(value))
     return scheme
 
+# takes seconds to turn them into HH:mm:ss
+# credit: https://arcpy.wordpress.com/2012/04/20/146/
+def duration_format(sec_elapsed):
+    h = int(sec_elapsed / (60 * 60))
+    m = int((sec_elapsed % (60 * 60)) / 60)
+    s = sec_elapsed % 60.
+    return "{}:{:>02}:{:>05.2f}".format(h, m, s)
+
 
 # === Core ===
 def switch(var, binding):
