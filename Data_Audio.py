@@ -49,6 +49,7 @@ class Audio:
                     renamed = intpadding(i+1)+' - '+filename # we add +1 to the index to avoid having a "00" tracknumber.
                     log.warn('Assumed "'+filename+'" is of format <artist> - <track>')
                 else:
+                    artist = self.parent.artist
                     renamed = intpadding(i+1)+' - '+artist+' - '+filename # we add +1 to the index to avoid having a "00" tracknumber.
                     log.warn('Assumed "'+filename+'" is of format <track>')
                 if renamed: 
