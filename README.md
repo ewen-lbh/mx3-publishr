@@ -72,7 +72,8 @@ nothing means implicitly fetched with predetermined paths & filenaming schemes
 - Songs/Videos filenames : \<artist\> - \<trackname\>.\<mp3|wav\>
 
 # Commit naming convention
-```<type>(<scope>): <subject>
+```
+<type>(<scope>): <subject>
 <NEWLINE>
 <description>
 <NEWLINE>
