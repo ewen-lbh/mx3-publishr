@@ -67,6 +67,7 @@ nothing means implicitly fetched with predetermined paths & filenaming schemes
 - Database operations
 - CLI Progress bars ?
 - Regex
+- FTP
 
 ### NAMING SCHEMES
 - Cover arts : \<collection\> cover art (\<landscape|square\>).png
