@@ -41,6 +41,54 @@ REMIX_TRACK_SUFFIX = ' ('+SELF_NAME+' Remix)'
 # What to appnd at the end of singles' collection names
 SINGLE_COLLECTION_SUFFIX = ' - Single'
 
+# --- YouTube ---
+# YouTube generic tags (will be added to artist, collection, kind and track names tags)
+YOUTUBE_GENERIC_TAGS = [
+    'Chronéis',
+    'Kronéys',
+    'Cronéis',
+    'Croneis',
+    'Kroneys',
+    'Chroneis',
+    'Cronéys',
+    'Croneys',
+    'Kronéis',
+    'Kroneis',
+    'Ewen',
+    'Le',
+    'Bihan',
+    'Minecraft',
+    'WyxxyW',
+    'WyxyW',
+    'Wixxiew',
+    'Wixiew'
+]
+YOUTUBE_TITLE_SCHEME = '[artist] - [title] ([collection] [kind])'
+
+# --- Social Medias ---
+SOCIAL_MEDIAS_BODY_SCHEME = '[newword] [kind] !\nÉcoutez-le ici: https://mx3creations.com/track/[trackID]'
+SOCIAL_MEDIAS_IMAGES = {
+    'ig' : 'square',
+    'fb' : 'landscape',
+    'tw' : 'landscape'
+}
+
+# --- Database ---
+DB_FIELDS_SCHEMES = {
+    'type' : '`[kind]`',
+    'release_date' : '`[timestamp]`',
+    'ytUrl' : '`https://youtube.com/watch?v=[ytID]`',
+    'EN__track_description' : '`[track_description_EN]`',
+    'FR__track_description' : '`[track_description_FR]`',
+    'track_names' : '`[json_tracklist]`',
+    'artist' : '`[artist]`',
+    'track_durations' : '`[json_track_durations]`'
+}
+DB_NAME = 'mx3'
+DB_TABLE = 'musiclist'
+
+DB_QUERY_SCHEME = f'INSERT INTO {DB_NAME}.{DB_TABLE} ([keys]) VALUES ([values])'
+
 # === CLI ===
 USER_INPUT_INDICATOR = ">> "
 LOG_TYPE_SEPARATOR = '|'
