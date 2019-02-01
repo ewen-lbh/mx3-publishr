@@ -6,6 +6,7 @@ class Video:
     def __init__(self, parentself):
         self.parent = parentself
 
+    # returns audio filepaths of tracks that doesn't have videos
     def missing(self):
         # if the video folder isnt there, create one and return all tracks as videos to make (since no video exists)
         if not os.path.isdir(self.parent.dirs.video): 
@@ -17,7 +18,8 @@ class Video:
         audios = self.parent.audio.lists['names']
         videos = os.listdir(self.parent.dirs.video)
         videos = [rmext(filename(i)) for i in videos]
-        return list(set(audios) - set(videos))
+        missing_names = list(set(audios) - set(videos))
+        return [self.parent.dirs.audio+name+'.mp3' for name in missing_names]
 
     def create(self, audio, **kwargs):
         img = self.parent.cover.get('landscape')
