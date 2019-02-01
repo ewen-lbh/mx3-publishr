@@ -4,3 +4,4 @@ __pycache__/*
 playground.py
 *.code-snippets
 *vscode*
+**/*TEMP_MPY*
