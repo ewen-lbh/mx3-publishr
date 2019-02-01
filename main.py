@@ -36,6 +36,10 @@ else:
 # make new object with userdata (when its confirmed correct by user)
 log.new_step()
 track = Data(userdata)
+# show fetched tracks
+tracklist = '\n'.join(track.audio.lists['names'])
+log.info(f"Tracklist:\n{tracklist}'")
+del tracklist
 
 # getting cover arts
 log.new_step()
@@ -46,6 +50,7 @@ if not track.cover.exists('square'):
     crop_direction = ask.choices('What part of it do you want to keep ?',['left','center','right'], shortcuts=True)
     log.debug(crop_direction)
     track.cover.make_square(crop_direction)
+    del crop_direction
 else:
     log.info('All cover art versions (square and landscape) found !')
 
