@@ -4,6 +4,7 @@ A script to automate the tedious process of getting music out, currently in cons
 - Cover arts square auto-creation (by cropping)
 - Renaming of audio files following a scheme
 - CLI log types dynamically created, see LOG_TYPES in consts.py
+- Automatic video generation from audiofiles and cover art
 
 /!\\ Readme imported from my personnal trello card's description
 
