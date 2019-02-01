@@ -23,7 +23,8 @@ class Video:
         img = self.parent.cover.get('landscape')
         videofilename = self.parent.audio.get('name', rmext(filename(audio)))+'.mp4'
         destfolder = self.parent.dirs.video
-        fps = kwargs['fps'] or 30
+        try: fps = kwargs['fps']
+        except KeyError: fps = 30
 
         log.debug('Getting duration from the audio file...')
         # Get length of video from the audio file
