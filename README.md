@@ -45,6 +45,7 @@ nothing means implicitly fetched with predetermined paths & filenaming schemes
 
 ### FILES MODIFIED
 - audio file (adds ID3 tags)
+- wav files (converted to mp3)
 
 ## Resources
 
@@ -68,6 +69,7 @@ nothing means implicitly fetched with predetermined paths & filenaming schemes
 - CLI Progress bars ?
 - Regex
 - FTP
+- WAV to MP3 conversion
 
 ### NAMING SCHEMES
 - Cover arts : \<collection\> cover art (\<landscape|square\>).png
