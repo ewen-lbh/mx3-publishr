@@ -49,7 +49,6 @@ class ask:
     def choices(text, choices):
         choicestr = '/'.join(choices)
         text += '\n('+choicestr+')'
-        log.question(text)
         answer = ask.anything(text)
         while answer not in choices:
             log.error('"'+answer+'" is not a valid answer, retrying...')
