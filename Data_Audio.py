@@ -44,12 +44,12 @@ class Audio:
         for i, filename in enumerate(filenames):
             if re.match(regex_full, filename):
                 renamed = False
-            elif ask.confirm(f'File {filename} is not in a good format. Do you want to rename it automatically ?'):
+            elif ask.confirm(f'File {filename} is not in a good format. Do you want to rename it automatically ?\nNote that the tracknumber will be assigned randomly (though 2 files won\'t have the same number)'):
                 if re.match(regex_artistname, filename):
-                    renamed = intpadding(i+1)+' - '+filename
+                    renamed = intpadding(i+1)+' - '+filename # we add +1 to the index to avoid having a "00" tracknumber.
                     log.warn('Assumed "'+filename+'" is of format <artist> - <track>')
                 else:
-                    renamed = intpadding(i+1)+' - '+artist+' - '+filename
+                    renamed = intpadding(i+1)+' - '+artist+' - '+filename # we add +1 to the index to avoid having a "00" tracknumber.
                     log.warn('Assumed "'+filename+'" is of format <track>')
                 if renamed: 
                     log.debug('Renaming '+filename+' to '+renamed)
