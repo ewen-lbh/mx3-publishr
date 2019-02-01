@@ -52,9 +52,9 @@ class Cover:
 
         log.debug("Cropping "+direction_msg+'...')
 
-        im.crop((left,bottom,right,top)).save(self.get('cover'))
+        im.crop((left,bottom,right,top)).save(self.get('square'))
 
-        log.success("Square cover art successfully created.")
+        log.success(f"Square cover art successfully saved under the name:\n{self.get('square')}")
     
     def exists(self, what):
         log.debug(f'Checking existence of file {self.get(what)}')
