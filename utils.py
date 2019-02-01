@@ -72,3 +72,12 @@ def filename(path):
 # get tracknumber from file name
 def tracknumber(filename):
     return re.sub(AUDIOS_FILENAME_REGEX, r'\1',filename)
+
+# === ARRAY SEARCHING ===
+# dig through an array, searching for a match against the nth letter of a string
+# return a double (index, value) of the first match, returns None if nothing found.
+# Primarly used for the 'shortcuts' option of cli.ask.choices()
+def search_with_nth_char(array, search, nth=1):
+    for i, v in enumerate(array):
+        if search == v[nth-1]: return (i, v) 
+    return None
