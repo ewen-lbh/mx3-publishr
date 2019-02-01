@@ -1,5 +1,9 @@
 # Mx3's Publishr
-A script to automate the tedious process of getting music out.
+A script to automate the tedious process of getting music out, currently in construction.
+### Currently supported features
+- Cover arts square auto-creation (by cropping)
+- Renaming of audio files following a scheme
+- CLI log types dynamically created, see LOG_TYPES in consts.py
 
 /!\\ Readme imported from my personnal trello card's description
 
