@@ -57,10 +57,19 @@ class ask:
         return answer
 
     @staticmethod
-    def choices(text, choices):
+    def choices(text, choices, **options):
+        if shortcuts in options:
+            choices = [i[1] for i in choices]
+
         choicestr = '/'.join(choices)
         text += '\n('+choicestr+')'
+
+        if shortcuts in options: text += ', you can use only the first letter to make your choice'
+
         answer = ask.anything(text)
+
+        if shortcuts in options: answer = answer[1]
+
         while answer not in choices:
             log.error('"'+answer+'" is not a valid answer, retrying...')
             answer = ask.anything(text)
@@ -97,7 +106,6 @@ class ask:
         userdata['collection'] = ask.anything('Please enter the '+userdata['type']+' name')
 
         return userdata
-
 
 # add missing log variants from LOG_TYPES if not defined yet
 for level in LOG_TYPES: 
