@@ -33,40 +33,57 @@ class Audio:
         })
 
     def rename(self):
+        # pattern checking variables
         regex_artistname = r'(.+) - (.+)'
         regex_full = r'(\d{2,}) - (.+) - (.+)'
 
+        # getting tracks to rename
         log.debug('Fetching tracklist for filename correction...')
-
         filenames = os.listdir(self.parent.dirs.audio)
-        renamed_count = 0
+        to_be_renamed = [i for i in filenames if not re.match(regex_full, i)]
 
-        for i, filename in enumerate(filenames):
-            if re.match(regex_full, filename):
-                renamed = False
-            elif ask.confirm(f'File {filename} is not in a good format. Do you want to rename it automatically ?\nNote that the tracknumber will be assigned randomly (though 2 files won\'t have the same number)'):
+        # if there are any tracks to rename...
+        if len(to_be_renamed) > 0: 
+            # ask for renaming confirmation...
+            renaming_confirmed = ask.confirm(f'File {filename} is not in a good format. Do you want to rename it automatically ?\nNote that the tracknumber will be assigned randomly (though 2 files won\'t have the same number)')
+            if not renaming_confirmed: log.fatal('User chose to close the script')
+
+            # tracking variables
+            renamed_count = 0
+            renamed_all = []
+            # data variables
+            path = self.parent.dirs.audio
+            artist = self.parent.artist
+
+            # for each file to be renamed
+            for i, filename in enumerate(to_be_renamed):
+                # format cases handling
                 if re.match(regex_artistname, filename):
                     renamed = intpadding(i+1)+' - '+filename # we add +1 to the index to avoid having a "00" tracknumber.
-                    log.warn('Assumed "'+filename+'" is of format <artist> - <track>')
+                    log.warn(f'Assumed "{filename}" is of format <artist> - <track>')
                 else:
-                    artist = self.parent.artist
                     renamed = intpadding(i+1)+' - '+artist+' - '+filename # we add +1 to the index to avoid having a "00" tracknumber.
-                    log.warn('Assumed "'+filename+'" is of format <track>')
-                if renamed: 
-                    log.debug('Renaming '+filename+' to '+renamed)
-                    os.rename(path+filename, path+renamed)
-                    renamed_count+=1
-            else:
-                log.fatal('User chose to close the script')
+                    log.warn(f'Assumed "{filename}" is of format <track>')
 
-        if renamed_count > 0:
-            log.success(f'Renamed {renamed_count} files successfully.')
+                # renaming
+                log.debug(f'Renaming {filename} to {renamed}')
+                os.rename(path+filename, path+renamed)
+                renamed_all.append(path+renamed)
+                renamed_count+=1
+
+                # loggging, updating lists
+                log.success(f'Renamed {renamed_count} files successfully.')
+                log.debug(f'Updating lists...')
+                self.update_lists()
         else:
-            log.info('All files were named correctly. Good job !')
+            log.debug('Nope! All good :D')
 
     def __init__(self, parentself):
         self.parent = parentself
         self.lists = {}
+        self.update_lists()
+
+    def update_lists(self):
         self.lists['paths'] = self.fetch_tracks('paths')
         self.lists['filenames'] = [filename(i) for i in self.lists['paths']]
         self.lists['names'] = [rmext(i) for i in self.lists['filenames']]
