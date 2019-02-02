@@ -67,7 +67,6 @@ log.section('Applying metadata')
 # add metadata to audio files
 track.audio.apply_metadata()
 
-
 # getting cover arts
 log.section('Fixing missing cover arts')
 if not track.cover.exists('landscape'):
@@ -76,9 +75,7 @@ if not track.cover.exists('landscape'):
 if not track.cover.exists('square'):
     log.warn(
         'Square cover art not found.\nCropping the landscape version to make a square one...')
-    crop_direction = ask.choices('What part of it do you want to keep ?', [
-                                 'left', 'center', 'right'], shortcuts=True)
-    log.debug(crop_direction)
+    crop_direction = ask.choices('What part of it do you want to keep ?', ['left', 'center', 'right'], shortcuts=True)
     track.cover.make_square(crop_direction)
     del crop_direction
 else:
@@ -88,7 +85,7 @@ log.section('Generating missing videos')
 missing_vids = track.video.missing()
 if len(missing_vids) > 0:
     missing_vids_str = '\n'.join(
-        [re.sub(f'3$', r'4', filename(i)) for i in missing_vids]) # display video file names
+        [re.sub(f'3$', r'4', filename(i)) for i in missing_vids])  # display video file names
     log.warn(f'{len(missing_vids)} video(s) missing:\n{missing_vids_str}')
     video_creation_confirmed = ask.confirm(
         'Want to generate videos automatically ? (this will take quite some time)\n' +
