@@ -5,7 +5,7 @@ import sys
 
 class log:
     @staticmethod
-    def log(text, logtype):
+    def log(text, logtype, method='print'):
         lines = text.split('\n')
         # get the indicator according to logtype and consts.
         indicator = LOG_TYPES[logtype]+LOG_TYPE_SEPARATOR+' '
@@ -17,7 +17,10 @@ class log:
         del lines[0]
         for i, line in enumerate(lines):
             msg += '\n'+indent+line
-        print(msg)
+        if method=='print':
+            print(msg)
+        elif method=='return':
+            return msg
 
     @staticmethod
     def watermark():
@@ -33,13 +36,10 @@ class log:
 
     @staticmethod
     def fatal(text='Internal Error', errmsg=None, exit_script=True):
-        log.log(text, 'fatal')
-        if exit_script:
-            # if errmsg isn't provided, get it from the text,
-            # but remove linebreaks, and add ellipsis if too long
-            if errmsg is None: errmsg = truncate(
-                text.replace('\\n', ' '), 50, '...')
-            raise SystemExit(errmsg)
+        if exit_script: 
+            sys.exit(log.log(text, 'fatal', method='return'))
+        else:
+            log.log(text, 'fatal')
 
     @staticmethod
     def debug(text):
@@ -56,10 +56,14 @@ class ask:
     @staticmethod
     def anything(text, flags=[]):
         log.question(text+'\n')
-        answer = input(USER_INPUT_INDICATOR)
+        try:
+            answer = input(USER_INPUT_INDICATOR)
+        except KeyboardInterrupt:
+            sys.exit('Script closed.')
         if not 'case_sensitive' in flags:
             answer = answer.lower()
         return answer
+
 
     @staticmethod
     def choices(text, choices, **options):
