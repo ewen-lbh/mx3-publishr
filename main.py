@@ -14,21 +14,20 @@ def get_userdata():
     global userdata
     global userdata_confirmed
 
-    # if not ask.confirm('Ask for data ?'):
-    #     userdata = debug.userdata
-    # else:
-    #     userdata = ask.userdata()
+    userdata = ask.userdata()
 
-    log.recap(userdata)
-
-    userdata_confirmed = ask.confirm('Is this information correct ?')
-
+    if userdata != {}: 
+        log.recap(userdata)
+        userdata_confirmed = ask.confirm('Is this information correct ?')
+    else:
+        userdata_confirmed = False
 
 if ENV == 'dev':
     # automatically remove files such as cover arts
     userdata = debug.userdata
     log.recap(userdata)
 else:
+    userdata = {}
     # handle re-asking
     get_userdata()
     while not userdata_confirmed:
@@ -50,9 +49,13 @@ if ENV == 'dev':
     log.warn('Recreating unideal initial file conditions...')
     debug.init(track)
 
-
+log.new_step()
 # rename tracks badly named
 track.audio.rename()
+
+log.new_step()
+# add metadata to audio files
+track.audio.apply_metadata()
 
 # show fetched tracks
 tracklist = '\n'.join(track.audio.lists['names'])
