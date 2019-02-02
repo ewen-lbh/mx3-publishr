@@ -129,13 +129,26 @@ def search_with_nth_char(array, search, nth=1):
 # return list of key-value pairs from dictionnary, following used_scheme parameter.
 # [k] = the keys
 # [v] = the values
-def kv_pairs(dictionnary, used_scheme="[k]: [v]"):
+def kv_pairs(dictionnary, used_scheme="[k]: [v]", center=True, align_keys='left'):
     # scheme presets
     if used_scheme == '/cArrow':
         used_scheme = f"[k] {CLI_STYLING_CODES['YELLOW']}=>{CLI_STYLING_CODES['ENDC']} [v]"
+    elif used_scheme == '/cProperties':
+        used_scheme = f"{CLI_STYLING_CODES['YELLOW']}[k]{CLI_STYLING_CODES['ENDC']}: [v]"
 
     retlist = list()
+    def spaces_to_add(string):
+        # get the difference of lenght between the dictionnary's longest key and the current string
+        nb_spaces = len(max(dictionnary.keys(), key=len)) - len(string)
+        # return a string of nb_spaces spaces
+        return ''.join([' '] * nb_spaces)
+
     for k, v in dictionnary.items():
-        string = scheme(used_scheme, {'k':k, 'v':v})
+        fk = k
+        fv = v
+        if center:
+            if align_keys == 'right': fk = spaces_to_add(fk)+fk
+            else: fk += spaces_to_add(k)
+        string = scheme(used_scheme, {'k':fk, 'v':fv})
         retlist.append(string)
     return retlist
