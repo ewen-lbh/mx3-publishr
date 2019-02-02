@@ -1,33 +1,36 @@
-from utils import *
-from cli import *
+from imports import *
 import os
+import eyed3
+import datetime
 
 class Audio:
-    def get(self, what, name):
+    def get(self, what, filename):
         repl_group = {
             'tracknumber' : r'\1',
             'artist' : r'\2',
             'track' : r'\3',
             'name' : r'\3'
         }
-        return re.sub(AUDIOS_FILENAME_REGEX, repl_group[what], name)
+        return re.sub(AUDIOS_FILENAME_REGEX, repl_group[what], filename)
 
     def fetch_tracks(self, what, **options):
-        log.debug(f'Checking existence of directory "{self.parent.dirs.audio}"...')
+        directory = self.parent.dirs.audio
 
-        if os.path.isdir(self.parent.dirs.audio):
+        log.debug(f'Checking existence of directory "{directory}"...')
+
+        if os.path.isdir(directory):
             log.debug('Fetching files in directory...')
-            try:
-                paths = [self.parent.dirs.audio+i for i in os.listdir(self.parent.dirs.audio)]
+            paths = [directory+i for i in os.listdir(directory) if is_ascii(i)]
+
+            if len(paths) > 0:
                 log.debug('Fetched files successfully')
                 if not 'silent' in options: log.success(f'{len(paths)} track(s) found!')
 
-            except: 
-                log.fatal(f"Couldn't open directory:\n{self.parent.dirs.audio}")
+            else: log.fatal(f'No files found in directory:\n{directory}')
         else:
             log.warn(f'Creating audio files directory')
-            os.mkdir(self.parent.dirs.audio)
-            log.fatal(f"Can't find the audio files directory:\n{self.parent.dirs.audio}")
+            os.mkdir(directory)
+            log.fatal(f"Can't find the audio files directory:\n{directory}")
         
         return switch(what, {
             'paths': paths,
@@ -80,6 +83,49 @@ class Audio:
             self.update_lists()
         else:
             log.debug('Nope! All good :D')
+
+    def apply_metadata(self):
+        # get date components for eyed3's custom Date() class
+        date_Y = int(datetime.date.today().strftime('%Y'))
+        date_m = int(datetime.date.today().strftime('%m'))
+        date_d = int(datetime.date.today().strftime('%d'))
+
+        metadata = {
+            "artist" : self.parent.artist,
+            "album" : self.parent.collection,
+            "cover path" : self.parent.cover.get('square'),
+            "date" : f'{date_d}/{date_m}/{date_Y}'
+        }
+        log.info('Metadata to apply:\n'+'\n'.join(kv_pairs(metadata)))
+
+        for filepath in self.lists['paths']:
+            noext = rmext(filename(filepath))
+            log.debug('Loading file into eyed3...')
+            audiofile = eyed3.load(filepath)
+
+            # artist
+            audiofile.tag.artist = audiofile.tag.album_artist = metadata['artist']
+            # title
+            audiofile.tag.title = self.get('track', filename(filepath))
+            # album title
+            audiofile.tag.album = metadata['album']
+            # track number (current, total)
+            audiofile.tag.track_num = (self.get('tracknumber', filename(filepath)), len(self.lists['paths']))
+            # release date YYYY-MM-dd
+            audiofile.tag.original_release_date = audiofile.tag.release_date = audiofile.tag.recording_date = eyed3.core.Date(date_Y, month=date_m, day=date_d)
+            # album arts (type, imagedata, imagetype, description)
+            audiofile.tag.images.set = (3, metadata['cover path'], 'image/png', COVERS_DESCRIPTION)
+
+            log.debug(f'Saving tags to {filename(filepath)}...')
+            try:
+                audiofile.tag.save()
+            except Exception as e:
+                log.error('@eyed3:'+str(e))
+            
+        log.success('Applied metadata to all audio files')
+            
+            
+            
 
     def __init__(self, parentself):
         self.parent = parentself
