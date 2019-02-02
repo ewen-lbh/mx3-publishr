@@ -45,7 +45,7 @@ class Audio:
         # if there are any tracks to rename...
         if len(to_be_renamed) > 0: 
             # ask for renaming confirmation...
-            renaming_confirmed = ask.confirm(f'Some files are not in a good naming format. Do you want to rename thme automatically ?\nNote that the tracknumbers will be assigned randomly (though 2 files won\'t have the same number)')
+            renaming_confirmed = ask.confirm(f'Some files are not in a good naming format. Do you want to rename them automatically ?\nNote that the tracknumbers will be assigned randomly (though 2 files won\'t have the same number)')
             if not renaming_confirmed: log.fatal('User chose to close the script')
 
             # tracking variables
