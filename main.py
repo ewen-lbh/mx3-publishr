@@ -26,7 +26,6 @@ def get_userdata():
 
 if ENV == 'dev':
     # automatically remove files such as cover arts
-    debug.init()
     userdata = debug.userdata
     log.recap(userdata)
 else:
@@ -45,6 +44,10 @@ for filename in glob.glob(cwd_path()+'*TEMP_MPY*'):
     log.debug(f'Deleted successfully.')
 
 track = Data(userdata)
+
+# recreate non-ideal situation to test audio files renaming, cover art & video generation
+if ENV == 'dev': debug.init(track)
+
 
 # rename tracks badly named
 track.audio.rename()
