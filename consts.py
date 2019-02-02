@@ -3,24 +3,26 @@ PRIMITIVE_TYPES = (int, str, bool, float, dict, set, list)
 
 # === ENV ===
 # set to 'prod' when using the script normally.
-ENV = 'dev'
+ENV = 'prod'
 
 # === FILES ===
+PATH_DRIVE = '/mnt/d'
 BASEPATHS = {}
 FILENAME_SCHEMES = {}
 # Cover art consts
-BASEPATHS['cover'] = 'D:/Users/ewenl/Desktop/GRAPHISM/Sync/Covers/'
+BASEPATHS['cover'] = PATH_DRIVE+'/Users/ewenl/Desktop/GRAPHISM/Sync/Covers/'
 FILENAME_SCHEMES['cover'] = '[collection] cover art ([format]).png'
 COVERS_FILENAME_REGEX = r'(.+) cover art (.+)\.png'
 
 # Music videos consts
 VIDEOS_COVERART_FORMAT_USED = 'landscape'
-BASEPATHS['video'] = 'D:/Users/ewenl/Desktop/GRAPHISM/Mx3 YT/'
+BASEPATHS['video'] = PATH_DRIVE+'/Users/ewenl/Desktop/GRAPHISM/Mx3 YT/'
 FILENAME_SCHEMES['video'] = '[artist] - [track].mp4'
 VIDEOS_FILENAME_REGEX = r'(.+) - (.+)\.\w{3,}'
 
 # Audio file consts
-BASEPATHS['audio'] = 'D:/Users/ewenl/Documents/Image-Line/Data/FL Studio/Projects/#DONE/'
+BASEPATHS['audio'] = PATH_DRIVE + \
+    '/Users/ewenl/Documents/Image-Line/Data/FL Studio/Projects/#DONE/'
 FILENAME_SCHEMES['audio'] = '[tracknumber] - [artist] - [track].mp3'
 AUDIOS_FILENAME_REGEX = r'(\d{2,}) - (.+) - (.+)\.\w{3,}$'
 
@@ -32,8 +34,12 @@ FIELDS_FORBIDDEN_CHARS = ['.', '<', '>', '/', '\\']
 COLLECTION_KINDS = ['ep', 'album']
 AVAIL_KINDS = ['ep', 'album', 'single', 'remix']
 
-# Your artist name
+# Your artist name & website
 SELF_NAME = 'Mx3'
+SELF_WEBSITE = {
+    'pretty': 'mx3creations.com',
+    'full': 'https://mx3creations.com/'
+}
 
 # What to append at the end of remixes' track names
 REMIX_TRACK_SUFFIX = ' ('+SELF_NAME+' Remix)'
@@ -68,26 +74,29 @@ YOUTUBE_TITLE_SCHEME = '[artist] - [title] ([collection] [kind])'
 # --- Social Medias ---
 SOCIAL_MEDIAS_BODY_SCHEME = '[newword] [kind] !\nÉcoutez-le ici: https://mx3creations.com/track/[trackID]'
 SOCIAL_MEDIAS_IMAGES = {
-    'ig' : 'square',
-    'fb' : 'landscape',
-    'tw' : 'landscape'
+    'ig': 'square',
+    'fb': 'landscape',
+    'tw': 'landscape'
 }
 
 # --- Database ---
 DB_FIELDS_SCHEMES = {
-    'type' : '`[kind]`',
-    'release_date' : '`[timestamp]`',
-    'ytUrl' : '`https://youtube.com/watch?v=[ytID]`',
-    'EN__track_description' : '`[track_description_EN]`',
-    'FR__track_description' : '`[track_description_FR]`',
-    'track_names' : '`[json_tracklist]`',
-    'artist' : '`[artist]`',
-    'track_durations' : '`[json_track_durations]`'
+    'type': '`[kind]`',
+    'release_date': '`[timestamp]`',
+    'ytUrl': '`https://youtube.com/watch?v=[ytID]`',
+    'EN__track_description': '`[track_description_EN]`',
+    'FR__track_description': '`[track_description_FR]`',
+    'track_names': '`[json_tracklist]`',
+    'artist': '`[artist]`',
+    'track_durations': '`[json_track_durations]`'
 }
 DB_NAME = 'mx3'
 DB_TABLE = 'musiclist'
 
 DB_QUERY_SCHEME = f'INSERT INTO {DB_NAME}.{DB_TABLE} ([keys]) VALUES ([values])'
+
+# --- ID3 Tags ---
+COVERS_DESCRIPTION = f'Artwork by {SELF_NAME} - {SELF_WEBSITE["pretty"]}'
 
 # === CLI ===
 USER_INPUT_INDICATOR = ">> "
@@ -148,14 +157,18 @@ if SPECIAL_CHARS_COMPATIBILITY_LEVEL >= 2:
     SPECIAL_CHARS['ox'] = '⦻'
 
 # === WATERMARK ===
+
+
 def _list_logvariants():
     logvariants = str()
     for k in LOG_TYPES:
         v = LOG_TYPES[k]
         k = k.title()
-        if k == 'Debug' and not VERBOSE_OUTPUT: k+=' (deactivated)'
+        if k == 'Debug' and not VERBOSE_OUTPUT:
+            k += ' (deactivated)'
         logvariants += f'             - "{v}{LOG_TYPE_SEPARATOR}" {k}\n'
     return logvariants
+
 
 WATERMARK = """
 
@@ -199,11 +212,11 @@ WATERMARK = """
             
                            %(rArr)s  Let's start!
             
-"""  % {
-'logsep':LOG_TYPE_SEPARATOR, 
-'userinput':USER_INPUT_INDICATOR, 
-'rArr':SPECIAL_CHARS['rArr'],
-'logvariants_list':_list_logvariants()
+""" % {
+    'logsep': LOG_TYPE_SEPARATOR,
+    'userinput': USER_INPUT_INDICATOR,
+    'rArr': SPECIAL_CHARS['rArr'],
+    'logvariants_list': _list_logvariants()
 }
 
 del _list_logvariants
