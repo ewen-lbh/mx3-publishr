@@ -18,16 +18,16 @@ class Audio:
     def fetch_tracks(self, what, **options):
         directory = self.parent.dirs.audio
 
-        log.debug(f'Checking existence of directory "{directory}"...')
+        if 'silent' not in options: log.debug(f'Checking existence of directory "{directory}"...')
 
         if os.path.isdir(directory):
-            log.debug('Fetching files in directory...')
+            if 'silent' not in options: log.debug('Fetching files in directory...')
             paths = [directory+i for i in os.listdir(directory) if is_ascii(i)]
 
             if len(paths) > 0:
-                log.debug('Fetched files successfully')
-                if 'silent' not in options: log.success(f'{len(paths)} track(s) found!')
-
+                if 'silent' not in options:
+                    log.debug('Fetched files successfully')
+                    log.success(f'{len(paths)} track(s) found!')
             else: log.fatal(f'No files found in directory:\n{directory}')
         else:
             log.warn(f'Creating audio files directory')
@@ -85,7 +85,7 @@ class Audio:
             # loggging, updating lists
             log.success(f'Renamed {renamed_count} files successfully.')
             log.debug(f'Updating lists...')
-            self.update_lists()
+            self.update_lists(silent=True)
         else:
             log.info('Nope! All good :D')
 
@@ -95,14 +95,18 @@ class Audio:
         date_y = int(datetime.date.today().strftime('%Y'))
         date_m = int(datetime.date.today().strftime('%m'))
         date_d = int(datetime.date.today().strftime('%d'))
+        # get total count of tracks
+        total = len(self.lists["paths"])
 
         metadata = {
-            "artist": self.parent.artist,
-            "album": self.parent.collection,
-            "cover path": self.parent.cover.get('square'),
-            "date": f'{date_d}/{date_m}/{date_y}'
+            "Artist": self.parent.artist,
+            "Album": self.parent.collection,
+            "Cover art path": self.parent.cover.get('square'),
+            "Date": f'{date_d}/{date_m}/{date_y}',
+            "Title": color_text('track\'s title', 'RED'),
+            "Track number": color_text(f'1-{total}', 'RED')+f'/{total}'
         }
-        log.info('Metadata to apply:\n'+'\n'.join(kv_pairs(metadata)))
+        log.info('Metadata to apply:\n'+'\n'.join(kv_pairs(metadata, '/cSpace')))
         if not ask.confirm('Apply that data to all audio files ?'): log.warn('Skipped metadata application')
         else:
             applied_count = 0
@@ -111,17 +115,17 @@ class Audio:
                 audiofile = eyed3.load(filepath)
 
                 # artist
-                audiofile.tag.artist = audiofile.tag.album_artist = metadata['artist']
+                audiofile.tag.artist = audiofile.tag.album_artist = metadata['Artist']
                 # title
                 audiofile.tag.title = self.get('track', filename(filepath))
                 # album title
-                audiofile.tag.album = metadata['album']
+                audiofile.tag.album = metadata['Album']
                 # track number (current, total)
-                audiofile.tag.track_num = (self.get('tracknumber', filename(filepath)), len(self.lists['paths']))
+                audiofile.tag.track_num = (self.get('tracknumber', filename(filepath)), total)
                 # release date YYYY-MM-dd
                 audiofile.tag.original_release_date = audiofile.tag.release_date = audiofile.tag.recording_date = eyed3.core.Date(date_y, month=date_m, day=date_d)
                 # album arts (type, imagedata, imagetype, description)
-                audiofile.tag.images.set = (3, metadata['cover path'], 'image/png', COVERS_DESCRIPTION)
+                audiofile.tag.images.set = (3, metadata['Cover art path'], 'image/png', COVERS_DESCRIPTION)
 
                 log.debug(f'Saving tags to {filename(filepath)}...')
                 try:
@@ -137,7 +141,10 @@ class Audio:
         self.lists = {}
         self.update_lists()
 
-    def update_lists(self):
-        self.lists['paths'] = self.fetch_tracks('paths')
+    def update_lists(self, silent=False):
+        if silent:
+            self.lists['paths'] = self.fetch_tracks('paths', silent=True)
+        else:
+            self.lists['paths'] = self.fetch_tracks('paths')
         self.lists['filenames'] = [filename(i) for i in self.lists['paths']]
         self.lists['names'] = [rmext(i) for i in self.lists['filenames']]

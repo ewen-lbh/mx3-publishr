@@ -42,9 +42,8 @@ class log:
 
     @staticmethod
     def recap(userdata):
-        msg = "To recap, here's all the information you gave..."
-        for prop, val in userdata.items():
-            msg += f"\n{prop.title()}: {truncate(val, 30)}"
+        msg = "To recap, here's all the information you gave...\n"
+        msg += '\n'.join(kv_pairs(userdata, '/cSpace', title_case='keys'))
         log.info(msg)
 
 
@@ -63,8 +62,8 @@ class log:
     @staticmethod
     def section(section):
         if SECTION_UPPERCASE: section = section.upper()
-        section = color_text(section, SECTION_COLOR)
-        print(f'\n\n\n{SECTION_WRAP[0]+section+SECTION_WRAP[1]}\n')
+        section = f'\n\n\n{SECTION_WRAP[0]+section+SECTION_WRAP[1]}\n'
+        print(color_text(section, SECTION_COLOR))
 
 
 class ask:

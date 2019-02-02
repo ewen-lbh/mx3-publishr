@@ -129,26 +129,44 @@ def search_with_nth_char(array, search, nth=1):
 # return list of key-value pairs from dictionnary, following used_scheme parameter.
 # [k] = the keys
 # [v] = the values
-def kv_pairs(dictionnary, used_scheme="[k]: [v]", center=True, align_keys='left'):
-    # scheme presets
-    if used_scheme == '/cArrow':
-        used_scheme = f"[k] {CLI_STYLING_CODES['YELLOW']}=>{CLI_STYLING_CODES['ENDC']} [v]"
-    elif used_scheme == '/cProperties':
-        used_scheme = f"{CLI_STYLING_CODES['YELLOW']}[k]{CLI_STYLING_CODES['ENDC']}: [v]"
-
+def kv_pairs(dictionnary, used_scheme="[k]: [v]", center=True, align='left', title_case=False):
+    # returned list
     retlist = list()
+    # SCHEME PRESETS
+    color = CLI_STYLING_CODES[LISTS_ACCENT_COLOR]
+    roloc = CLI_STYLING_CODES['ENDC']  # similarly to if and fi, color and roloc
+
+    if used_scheme == '/cArrow':
+        # colored arrow, white keys & values
+        used_scheme = f"[k] {color}=>{roloc} [v]"
+    elif used_scheme == '/cSemicolon':
+        # separate with :, colored keys, white pairs
+        used_scheme = f"{color}[k]{roloc}: [v]"
+    elif used_scheme == '/cQuotes':
+        # separate with a space, colored keys, white pairs, double-quotes-surrounded values
+        used_scheme = f"{color}[k]{roloc} \"[v]\""
+    elif used_scheme == '/cSpace':
+        # separate with a space, colored keys, white pairs
+        used_scheme = f"{color}[k]{roloc} [v]"
+
+    # Centering
     def spaces_to_add(string):
         # get the difference of lenght between the dictionnary's longest key and the current string
         nb_spaces = len(max(dictionnary.keys(), key=len)) - len(string)
         # return a string of nb_spaces spaces
         return ''.join([' '] * nb_spaces)
 
+    # for each key-value pair
     for k, v in dictionnary.items():
-        fk = k
-        fv = v
+        # title casing
+        fk = k.title() if title_case in ('keys', 'both') else k
+        fv = v.title() if title_case in ('values', 'both') else v
+        # centering & aligning keys
         if center:
-            if align_keys == 'right': fk = spaces_to_add(fk)+fk
+            if align == 'right': fk = spaces_to_add(fk)+fk
             else: fk += spaces_to_add(k)
+        # make a string
         string = scheme(used_scheme, {'k':fk, 'v':fv})
+        # add it to the list
         retlist.append(string)
     return retlist

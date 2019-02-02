@@ -13,12 +13,9 @@ userdata = {
 def init(Data_obj):
     # remove square cover art
     coverartsqr = Data_obj.cover.get('square')
-    try:
+    if os.path.isfile(coverartsqr):
         os.remove(coverartsqr)
-        log.debug(f'Removed {coverartsqr}')
-    except FileNotFoundError: 
-        # if the file doesnt exist, no need to delete
-        pass
+        log.debug(f'Removed {filename(coverartsqr)}')
     del coverartsqr
 
     # remove a video if none is missing
