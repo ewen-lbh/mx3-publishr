@@ -18,17 +18,23 @@ class log:
         for i, line in enumerate(lines):
             msg += '\n'+indent+line
         # coloured output
-        plain = msg
-        if colored:
-            msg = CLI_STYLING_CODES[LOG_TYPES_COLORS[logtype]] + msg + CLI_STYLING_CODES['ENDC']
+        msg = CLI_STYLING_CODES[LOG_TYPES_COLORS[logtype]] + msg + CLI_STYLING_CODES['ENDC']
+        plain = strip_color_text(msg)
 
         if method == 'print':
-            print(msg)
+            if colored:
+                print(msg)
+            else:
+                print(plain)
             with open('latest.log', 'a') as f:
                 f.write(plain+'\n')
 
         elif method == 'return':
-            return msg
+            if colored:
+                return msg
+            else:
+                return plain
+
 
     @staticmethod
     def watermark():
@@ -66,13 +72,16 @@ class ask:
     def anything(text, flags=[]):
         log.question(text+'\n')
         try:
-            answer = input(USER_INPUT_INDICATOR)
+            answer = str(input(USER_INPUT_INDICATOR))
         except KeyboardInterrupt:
             log.fatal('Script closed.')
         if not 'case_sensitive' in flags:
             answer = answer.lower()
         if not 'accept_non_ascii' in flags and not is_ascii(answer):
             log.fatal('The answer contains special characters.\nOnly ASCII characters are allowed for now.')
+        # add answer to logs
+        with open('latest.log', 'a') as f:
+            f.write(USER_INPUT_INDICATOR+answer+'\n')
         return answer
 
 
