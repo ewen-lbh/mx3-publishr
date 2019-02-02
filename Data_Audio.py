@@ -53,36 +53,34 @@ class Audio:
         to_be_renamed = [i for i in filenames if not re.match(regex_full, i)]
 
         # if there are any tracks to rename...
-        if len(to_be_renamed) > 0: 
-            # ask for renaming confirmation...
-            renaming_confirmed = ask.confirm(f'Some files are not in a good naming format. Do you want to rename them automatically ?\n' +
-                                              'Note that the tracknumbers will be assigned randomly (though 2 files won\'t have the same number)')
-            if not renaming_confirmed: log.fatal('User chose to close the script')
-
-            # tracking variables
-            renamed_count = 0
-            renamed_all = []
-            # data variables
+        if len(to_be_renamed) > 0:
+            # init variables
             path = self.parent.dirs.audio
             artist = self.parent.artist
-
+            preview_renames = dict()
             # for each file to be renamed
             for i, filename in enumerate(to_be_renamed):
                 # format cases handling
-                track_no = intpadding(i + 1)
+                track_no = intpadding(i + 1) # + 1 to avoid having a "00" tracknumber.
                 if re.match(regex_artistname, filename):
-                    # we add +1 to the index to avoid having a "00" tracknumber.
                     renamed = track_no + ' - ' + filename
-                    log.warn(f'Assumed "{filename}" is of format <artist> - <track>')
                 else:
                     renamed = track_no + ' - ' + artist + ' - ' + filename
-                    log.warn(f'Assumed "{filename}" is of format <track>')
+                # put into preview dict
+                preview_renames[filename] = renamed
 
+            log.info('Files to be renamed:\n'+'\n'.join(kv_pairs(preview_renames, '/cArrow')))
+
+            # ask for renaming confirmation...
+            renaming_confirmed = ask.confirm('Rename these files ?')
+            if not renaming_confirmed: log.fatal('User chose to close the script')
+
+            # actually renaming...
+            renamed_count = 0
+            for orig, dest in preview_renames.items():
                 # renaming
-                log.debug(f'Renaming {filename} to {renamed}')
-                os.rename(path+filename, path+renamed)
-                renamed_all.append(path+renamed)
-                renamed_count+=1
+                os.rename(path + orig, path + dest)
+                renamed_count += 1
 
             # loggging, updating lists
             log.success(f'Renamed {renamed_count} files successfully.')
@@ -105,31 +103,34 @@ class Audio:
             "date": f'{date_d}/{date_m}/{date_y}'
         }
         log.info('Metadata to apply:\n'+'\n'.join(kv_pairs(metadata)))
+        if not ask.confirm('Apply that data to all audio files ?'): log.warn('Skipped metadata application')
+        else:
+            applied_count = 0
+            for filepath in self.lists['paths']:
+                log.debug('Loading file into eyed3...')
+                audiofile = eyed3.load(filepath)
 
-        for filepath in self.lists['paths']:
-            log.debug('Loading file into eyed3...')
-            audiofile = eyed3.load(filepath)
+                # artist
+                audiofile.tag.artist = audiofile.tag.album_artist = metadata['artist']
+                # title
+                audiofile.tag.title = self.get('track', filename(filepath))
+                # album title
+                audiofile.tag.album = metadata['album']
+                # track number (current, total)
+                audiofile.tag.track_num = (self.get('tracknumber', filename(filepath)), len(self.lists['paths']))
+                # release date YYYY-MM-dd
+                audiofile.tag.original_release_date = audiofile.tag.release_date = audiofile.tag.recording_date = eyed3.core.Date(date_y, month=date_m, day=date_d)
+                # album arts (type, imagedata, imagetype, description)
+                audiofile.tag.images.set = (3, metadata['cover path'], 'image/png', COVERS_DESCRIPTION)
 
-            # artist
-            audiofile.tag.artist = audiofile.tag.album_artist = metadata['artist']
-            # title
-            audiofile.tag.title = self.get('track', filename(filepath))
-            # album title
-            audiofile.tag.album = metadata['album']
-            # track number (current, total)
-            audiofile.tag.track_num = (self.get('tracknumber', filename(filepath)), len(self.lists['paths']))
-            # release date YYYY-MM-dd
-            audiofile.tag.original_release_date = audiofile.tag.release_date = audiofile.tag.recording_date = eyed3.core.Date(date_y, month=date_m, day=date_d)
-            # album arts (type, imagedata, imagetype, description)
-            audiofile.tag.images.set = (3, metadata['cover path'], 'image/png', COVERS_DESCRIPTION)
+                log.debug(f'Saving tags to {filename(filepath)}...')
+                try:
+                    audiofile.tag.save()
+                    applied_count += 1
+                except Exception as e:
+                    log.error('@eyed3:'+str(e))
 
-            log.debug(f'Saving tags to {filename(filepath)}...')
-            try:
-                audiofile.tag.save()
-            except Exception as e:
-                log.error('@eyed3:'+str(e))
-
-        log.success('Applied metadata to all audio files')
+            log.success(f'Applied metadata to {applied_count} audio file(s)')
 
     def __init__(self, parentself):
         self.parent = parentself
