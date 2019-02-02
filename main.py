@@ -46,7 +46,9 @@ for filename in glob.glob(cwd_path()+'*TEMP_MPY*'):
 track = Data(userdata)
 
 # recreate non-ideal situation to test audio files renaming, cover art & video generation
-if ENV == 'dev': debug.init(track)
+if ENV == 'dev': 
+    log.warn('Recreating unideal initial file conditions...')
+    debug.init(track)
 
 
 # rename tracks badly named
