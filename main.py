@@ -37,19 +37,25 @@ else:
         get_userdata()
 
 
-# make new object with userdata (when its confirmed correct by user)
-log.section('Cleaning temporary files')
-# delete temporary MoviePy sound files
-for filename in glob.glob(cwd_path()+'*TEMP_MPY*'):
-    log.debug(f'Deleting temporary file {unix_slashes(filename)}...')
-    os.remove(filename)
-    log.debug(f'Deleted successfully.')
-log.success('Cleaned all temporary files !')
 
+# delete temporary MoviePy sound files
+temp_files = glob.glob(cwd_path()+'*TEMP_MPY*')
+if len(temp_files) > 0:
+    log.section('Cleaning temporary files')
+    for filename in temp_files:
+        log.debug(f'Deleting temporary file {unix_slashes(filename)}...')
+        os.remove(filename)
+        log.debug(f'Deleted successfully.')
+        log.success('Cleaned all temporary files !')
+del temp_files
+
+# make new object with userdata (when its confirmed correct by user)
+log.section('Getting tracks')
 track = Data(userdata)
 
 # recreate non-ideal situation to test audio files renaming, cover art & video generation
-if ENV == 'dev': 
+if ENV == 'dev':
+    log.section('Debugging initial steps')
     log.warn('Recreating unideal initial file conditions...')
     debug.init(track)
 

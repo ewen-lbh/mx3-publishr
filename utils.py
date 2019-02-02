@@ -123,6 +123,10 @@ def search_with_nth_char(array, search, nth=1):
 # [k] = the keys
 # [v] = the values
 def kv_pairs(dictionnary, used_scheme="[k]: [v]"):
+    # scheme presets
+    if used_scheme == '/cArrow':
+        used_scheme = f"[k] {CLI_STYLING_CODES['YELLOW']}=>{CLI_STYLING_CODES['ENDC']} [v]"
+
     retlist = list()
     for k, v in dictionnary.items():
         string = scheme(used_scheme, {'k':k, 'v':v})
