@@ -8,6 +8,7 @@ userdata = {
     'collection' : 'Etymology',
 }
 
+
 def init(Data_obj):
     # remove square cover art
     coverartsqr = Data_obj.cover.get('square')

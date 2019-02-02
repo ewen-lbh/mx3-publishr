@@ -3,12 +3,12 @@ PRIMITIVE_TYPES = (int, str, bool, float, dict, set, list)
 
 # === ENV ===
 # set to 'prod' when using the script normally.
-ENV = 'prod'
+ENV = 'dev'
 
 # === FILES ===
 PATH_DRIVE = 'D:'
-BASEPATHS = {}
-FILENAME_SCHEMES = {}
+BASEPATHS = dict()
+FILENAME_SCHEMES = dict()
 # Cover art consts
 BASEPATHS['cover'] = PATH_DRIVE+'/Users/ewenl/Desktop/GRAPHISM/Sync/Covers/'
 FILENAME_SCHEMES['cover'] = '[collection] cover art ([format]).png'
@@ -44,7 +44,7 @@ SELF_WEBSITE = {
 # What to append at the end of remixes' track names
 REMIX_TRACK_SUFFIX = ' ('+SELF_NAME+' Remix)'
 
-# What to appnd at the end of singles' collection names
+# What to append at the end of singles' collection names
 SINGLE_COLLECTION_SUFFIX = ' - Single'
 
 # --- YouTube ---
@@ -72,7 +72,7 @@ YOUTUBE_GENERIC_TAGS = [
 YOUTUBE_TITLE_SCHEME = '[artist] - [title] ([collection] [kind])'
 
 # --- Social Medias ---
-SOCIAL_MEDIAS_BODY_SCHEME = '[newword] [kind] !\nÉcoutez-le ici: https://mx3creations.com/track/[trackID]'
+SOCIAL_MEDIAS_BODY_SCHEME = '[new_word] [kind] !\nÉcoutez-le ici: https://mx3creations.com/track/[trackID]'
 SOCIAL_MEDIAS_IMAGES = {
     'ig': 'square',
     'fb': 'landscape',
@@ -100,9 +100,9 @@ COVERS_DESCRIPTION = f'Artwork by {SELF_NAME} - {SELF_WEBSITE["pretty"]}'
 
 # === CLI ===
 USER_INPUT_INDICATOR = ">> "
-LOG_TYPE_SEPARATOR = '|'
+LOG_TYPES_WRAP = ('[', ']')
 LOG_TYPES = {
-    "info": " ",
+    "info": "i",
     "debug": "D",
     "success": "S",
     "warn": "!",
@@ -110,6 +110,8 @@ LOG_TYPES = {
     "question": "?",
     "fatal": "FATAL",
 }
+SECTION_WRAP = ('==== ', ' ====')
+SECTION_UPPERCASE = True
 
 # ===Features===
 
@@ -132,7 +134,7 @@ AUTO_ADD_SINGLE_SUFFIX = False
 SPECIAL_CHARS_COMPATIBILITY_LEVEL = 1
 
 # Verbose output: show debug logs (log.debug methods)
-VERBOSE_OUTPUT = True
+VERBOSE_OUTPUT = False
 
 # --- Special chars ---
 SPECIAL_CHARS = {}
@@ -166,7 +168,7 @@ def _list_logvariants():
         k = k.title()
         if k == 'Debug' and not VERBOSE_OUTPUT:
             k += ' (deactivated)'
-        logvariants += f'             - "{v}{LOG_TYPE_SEPARATOR}" {k}\n'
+        logvariants += f'             - "{LOG_TYPES_WRAP[0]+str(v)+LOG_TYPES_WRAP[1]}" {k}\n'
     return logvariants
 
 
@@ -201,7 +203,7 @@ WATERMARK = """
                      github.com/ewen-lbh/mx3-publishr
             
                        ====SCRIPT INFORMATIONS====
-                  Each message is preceded by <character>%(logsep)s.
+                  Each message is preceded by %(logwrap_l)s<character>%(logwrap_r)s.
            The <character> indicates the type of message you're getting.
             
                       Here's the list of all characters:
@@ -213,7 +215,8 @@ WATERMARK = """
                            %(rArr)s  Let's start!
             
 """ % {
-    'logsep': LOG_TYPE_SEPARATOR,
+    'logwrap_l': LOG_TYPES_WRAP[0],
+    'logwrap_r' : LOG_TYPES_WRAP[1],
     'userinput': USER_INPUT_INDICATOR,
     'rArr': SPECIAL_CHARS['rArr'],
     'logvariants_list': _list_logvariants()

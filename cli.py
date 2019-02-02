@@ -8,7 +8,7 @@ class log:
     def log(text, logtype, method='print'):
         lines = text.split('\n')
         # get the indicator according to logtype and consts.
-        indicator = LOG_TYPES[logtype]+LOG_TYPE_SEPARATOR+' '
+        indicator = LOG_TYPES_WRAP[0]+LOG_TYPES[logtype]+LOG_TYPES_WRAP[1]+' '
         # add a space (' ') for each indicator character
         indent = ''.join([' '] * len(indicator))
         # add indicator and the first line to msg
@@ -17,9 +17,12 @@ class log:
         del lines[0]
         for i, line in enumerate(lines):
             msg += '\n'+indent+line
-        if method=='print':
+        if method == 'print':
             print(msg)
-        elif method=='return':
+            with open('latest.log', 'a') as f:
+                f.write(msg+'\n')
+
+        elif method == 'return':
             return msg
 
     @staticmethod
@@ -35,7 +38,7 @@ class log:
 
 
     @staticmethod
-    def fatal(text='Internal Error', errmsg=None, exit_script=True):
+    def fatal(text='Unknown Error', errmsg=None, exit_script=True):
         if exit_script: 
             sys.exit(log.log(text, 'fatal', method='return'))
         else:
@@ -47,9 +50,9 @@ class log:
             log.log(text, 'debug')
 
     @staticmethod
-    def new_step(char='', count=4):
-        for i in range(count):
-            print(char)
+    def section(section):
+        if SECTION_UPPERCASE: section = section.upper()
+        print(f'\n\n\n{SECTION_WRAP[0]+section+SECTION_WRAP[1]}\n')
 
 
 class ask:
@@ -75,9 +78,7 @@ class ask:
         if 'shortcuts' in options:
             orig_choices = choices
             choices = [i[0] for i in choices]
-
-
-        if 'shortcuts' in options: text += f'\nyou can use only the first letter to make your choice, eg. "{choices[0][0]}"'
+            text += f'\nyou can use only the first letter to make your choice, eg. "{choices[0]}" = "{orig_choices[0]}"'
 
         text += '\n('+choicestr+')'
 
@@ -98,7 +99,7 @@ class ask:
 
     @staticmethod
     def userdata():
-        userdata = {}
+        userdata = dict()
         # --- TRACK KIND ---
         userdata['kind'] = ask.choices('Please enter the kind of track you want to publish',AVAIL_KINDS, shortcuts=True)
         
@@ -116,12 +117,13 @@ class ask:
         if is_oc:
             userdata['artist'] = SELF_NAME
         else:
-            userdata['artist'] = ask.anything('Who did the original track ?')
+            userdata['artist'] = ask.anything('Who did the original track ?', flags=['case_sensitive'])
             
         # --- COLLECTION NAME ---
-        userdata['collection'] = ask.anything('Please enter the '+userdata['kind']+' name')
+        userdata['collection'] = ask.anything('Please enter the '+userdata['kind']+' name', flags=['case_sensitive'])
 
         return userdata
+
 
 # add missing log variants from LOG_TYPES if not defined yet
 for level in LOG_TYPES: 

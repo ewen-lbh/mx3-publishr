@@ -44,7 +44,7 @@ class Audio:
         regex_full = r'(\d{2,}) - (.+) - (.+)'
 
         # getting tracks to rename
-        log.debug('Fetching tracklist for filename correction...')
+        log.info('Fetching tracklist for filename correction...')
         filenames = os.listdir(self.parent.dirs.audio)
         to_be_renamed = [i for i in filenames if not re.match(regex_full, i)]
 
@@ -82,7 +82,7 @@ class Audio:
             log.debug(f'Updating lists...')
             self.update_lists()
         else:
-            log.debug('Nope! All good :D')
+            log.info('Nope! All good :D')
 
     def apply_metadata(self):
         # get date components for eyed3's custom Date() class
@@ -99,7 +99,6 @@ class Audio:
         log.info('Metadata to apply:\n'+'\n'.join(kv_pairs(metadata)))
 
         for filepath in self.lists['paths']:
-            noext = rmext(filename(filepath))
             log.debug('Loading file into eyed3...')
             audiofile = eyed3.load(filepath)
 
@@ -123,9 +122,6 @@ class Audio:
                 log.error('@eyed3:'+str(e))
             
         log.success('Applied metadata to all audio files')
-            
-            
-            
 
     def __init__(self, parentself):
         self.parent = parentself
@@ -136,6 +132,3 @@ class Audio:
         self.lists['paths'] = self.fetch_tracks('paths')
         self.lists['filenames'] = [filename(i) for i in self.lists['paths']]
         self.lists['names'] = [rmext(i) for i in self.lists['filenames']]
-
-    
-        

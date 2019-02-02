@@ -4,23 +4,26 @@ from Data import *
 # import as objects
 import debug
 import glob
+import datetime
 
 log.watermark()
+with open('latest.log', 'w') as f:
+    f.write(f'====== Log generated {datetime.date.today().strftime("%B %d, %Y")} ======\n\n\n'.upper())
+    f.write(WATERMARK)
 
 # userdata collecting process
-
-
 def get_userdata():
     global userdata
     global userdata_confirmed
 
     userdata = ask.userdata()
 
-    if userdata != {}: 
+    if userdata != {}:
         log.recap(userdata)
         userdata_confirmed = ask.confirm('Is this information correct ?')
     else:
         userdata_confirmed = False
+
 
 if ENV == 'dev':
     # automatically remove files such as cover arts
@@ -35,12 +38,13 @@ else:
 
 
 # make new object with userdata (when its confirmed correct by user)
-log.new_step()
+log.section('Cleaning temporary files')
 # delete temporary MoviePy sound files
 for filename in glob.glob(cwd_path()+'*TEMP_MPY*'):
     log.debug(f'Deleting temporary file {unix_slashes(filename)}...')
     os.remove(filename)
     log.debug(f'Deleted successfully.')
+log.success('Cleaned all temporary files !')
 
 track = Data(userdata)
 
@@ -49,11 +53,11 @@ if ENV == 'dev':
     log.warn('Recreating unideal initial file conditions...')
     debug.init(track)
 
-log.new_step()
+log.section('Renaming audio files')
 # rename tracks badly named
 track.audio.rename()
 
-log.new_step()
+log.section('Applying metadata')
 # add metadata to audio files
 track.audio.apply_metadata()
 
@@ -64,7 +68,7 @@ del tracklist
 
 
 # getting cover arts
-log.new_step()
+log.section('Fixing missing cover arts')
 if not track.cover.exists('landscape'):
     log.fatal('Landscape cover art not found')
 
@@ -79,7 +83,7 @@ if not track.cover.exists('square'):
 else:
     log.info('All cover art versions (square and landscape) found!')
 
-log.new_step()
+log.section('Generating missing videos')
 missing_vids = track.video.missing()
 if len(missing_vids) > 0:
     missing_vids_str = '\n'.join(
