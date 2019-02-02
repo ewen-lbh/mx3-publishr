@@ -1,5 +1,6 @@
-import re
+import os
 from consts import *
+import re
 
 # === Formatting ===
 # sentence case 
@@ -93,6 +94,12 @@ def filename(path):
 # get tracknumber from file name
 def tracknumber(filename):
     return re.sub(AUDIOS_FILENAME_REGEX, r'\1',filename)
+
+def cwd_path():
+    return unix_slashes(os.getcwd())+'/'
+
+def unix_slashes(path):
+    return path.replace('\\','/')
 
 # === ARRAY SEARCHING ===
 # dig through an array, searching for a match against the nth letter of a string

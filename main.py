@@ -3,6 +3,7 @@ from imports import *
 from Data import *
 # import as objects
 import debugdata
+import glob
 
 log.watermark()
 
@@ -32,6 +33,12 @@ else:
 
 # make new object with userdata (when its confirmed correct by user)
 log.new_step()
+# delete temporary MoviePy sound files
+for filename in glob.glob(cwd_path()+'*TEMP_MPY*'):
+    log.debug(f'Deleting temporary file {unix_slashes(filename)}...')
+    os.remove(filename)
+    log.debug(f'Deleted successfully.')
+
 track = Data(userdata)
 
 # rename tracks badly named
