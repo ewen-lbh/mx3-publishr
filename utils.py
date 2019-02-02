@@ -129,7 +129,13 @@ def search_with_nth_char(array, search, nth=1):
 # return list of key-value pairs from dictionnary, following used_scheme parameter.
 # [k] = the keys
 # [v] = the values
-def kv_pairs(dictionnary, used_scheme="[k]: [v]", center=True, align='left', title_case=False):
+def kv_pairs(dictionnary,
+             used_scheme="[k]: [v]",
+             center=True,
+             align='left',
+             title_case=False,
+             end=''
+             ):
     # returned list
     retlist = list()
     # SCHEME PRESETS
@@ -138,21 +144,29 @@ def kv_pairs(dictionnary, used_scheme="[k]: [v]", center=True, align='left', tit
 
     if used_scheme == '/cArrow':
         # colored arrow, white keys & values
+        separator   = ' => '
         used_scheme = f"[k] {color}=>{roloc} [v]"
     elif used_scheme == '/cSemicolon':
         # separate with :, colored keys, white pairs
+        separator   = ': '
         used_scheme = f"{color}[k]{roloc}: [v]"
     elif used_scheme == '/cQuotes':
         # separate with a space, colored keys, white pairs, double-quotes-surrounded values
+        separator   = ' "'
         used_scheme = f"{color}[k]{roloc} \"[v]\""
     elif used_scheme == '/cSpace':
         # separate with a space, colored keys, white pairs
+        separator   = ' '
         used_scheme = f"{color}[k]{roloc} [v]"
+    else:
+        separator = used_scheme.replace('[k]', '').replace('[v]', '')
 
     # Centering
-    def spaces_to_add(string):
+    def spaces_to_add(string, separator=None):
         # get the difference of lenght between the dictionnary's longest key and the current string
         nb_spaces = len(max(dictionnary.keys(), key=len)) - len(string)
+        # add separator to count if set
+        if separator is not None: nb_spaces += len(separator)
         # return a string of nb_spaces spaces
         return ''.join([' '] * nb_spaces)
 
@@ -165,6 +179,12 @@ def kv_pairs(dictionnary, used_scheme="[k]: [v]", center=True, align='left', tit
         if center:
             if align == 'right': fk = spaces_to_add(fk)+fk
             else: fk += spaces_to_add(k)
+        # handling of values with newlines
+        if '\n' in fv:
+            # add number of spaces equivalent to the longest key + the separator
+            fv = fv.replace('\n', '\n'+''.join([' '] * (len(max(dictionnary.keys(), key=len)) + len(separator))))
+        # add the character defined in end=
+        fv += end
         # make a string
         string = scheme(used_scheme, {'k':fk, 'v':fv})
         # add it to the list

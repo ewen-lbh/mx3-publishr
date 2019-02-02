@@ -7,6 +7,7 @@ import glob
 import datetime
 
 log.watermark()
+# latest.log header
 with open('latest.log', 'w') as f:
     f.write(f'====== Log generated {datetime.date.today().strftime("%B %d, %Y")} ======\n\n\n'.upper())
     f.write(WATERMARK)

@@ -7,16 +7,21 @@ class log:
     @staticmethod
     def log(text, logtype, method='print', colored=True):
         lines = text.split('\n')
-        # get the indicator according to logtype and consts.
-        indicator = LOG_TYPES_WRAP[0]+LOG_TYPES[logtype]+LOG_TYPES_WRAP[1]+' '
-        # add a space (' ') for each indicator character
-        indent = ''.join([' '] * len(indicator))
-        # add indicator and the first line to msg
-        msg = indicator+lines[0]
-        # add indent to all other lines
-        del lines[0]
-        for i, line in enumerate(lines):
-            msg += '\n'+indent+line
+        # the "plain" logtype bypasses all the pre-formatting
+        if logtype != 'plain':
+            # get the indicator according to logtype and consts.
+            indicator = LOG_TYPES_WRAP[0] + LOG_TYPES[logtype] + LOG_TYPES_WRAP[1] + ' '
+            # add a space (' ') for each indicator character
+            indent = ''.join([' '] * len(indicator))
+            # add indicator and the first line to msg
+            msg = indicator + lines[0]
+            # add indent to all other lines
+            del lines[0]
+            for i, line in enumerate(lines):
+                msg += '\n' + indent + line
+        else:
+            msg = text
+
         # coloured output
         msg = CLI_STYLING_CODES[LOG_TYPES_COLORS[logtype]] + msg + CLI_STYLING_CODES['ENDC']
         plain = strip_color_text(msg)

@@ -1,9 +1,10 @@
 # === CORE ===
+TEST = False
 PRIMITIVE_TYPES = (int, str, bool, float, dict, set, list)
 
 # === ENV ===
 # set to 'prod' when using the script normally.
-ENV = 'dev'
+ENV = 'prod'
 
 # === FILES ===
 PATH_DRIVE = 'D:'
@@ -21,8 +22,7 @@ FILENAME_SCHEMES['video'] = '[artist] - [track].mp4'
 VIDEOS_FILENAME_REGEX = r'(.+) - (.+)\.\w{3,}'
 
 # Audio file consts
-BASEPATHS['audio'] = PATH_DRIVE + \
-    '/Users/ewenl/Documents/Image-Line/Data/FL Studio/Projects/#DONE/'
+BASEPATHS['audio'] = PATH_DRIVE + '/Users/ewenl/Documents/Image-Line/Data/FL Studio/Projects/#DONE/'
 FILENAME_SCHEMES['audio'] = '[tracknumber] - [artist] - [track].mp3'
 AUDIOS_FILENAME_REGEX = r'(\d{2,}) - (.+) - (.+)\.\w{3,}$'
 
@@ -118,6 +118,7 @@ LOG_TYPES_COLORS = {
     "error": "DARK_RED",
     "question": "CYAN",
     "fatal": "RED",
+    "plain" : "WHITE"
 }
 
 CLI_STYLING_CODES = {
