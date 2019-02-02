@@ -22,8 +22,11 @@ class Audio:
                 log.debug('Fetched files successfully')
                 if not 'silent' in options: log.success(f'{len(paths)} track(s) found!')
 
-            except: log.fatal(f"Couldn't open directory:\n{self.parent.dirs.audio}")
+            except: 
+                log.fatal(f"Couldn't open directory:\n{self.parent.dirs.audio}")
         else:
+            log.warn(f'Creating audio files directory')
+            os.mkdir(self.parent.dirs.audio)
             log.fatal(f"Can't find the audio files directory:\n{self.parent.dirs.audio}")
         
         return switch(what, {
@@ -71,10 +74,10 @@ class Audio:
                 renamed_all.append(path+renamed)
                 renamed_count+=1
 
-                # loggging, updating lists
-                log.success(f'Renamed {renamed_count} files successfully.')
-                log.debug(f'Updating lists...')
-                self.update_lists()
+            # loggging, updating lists
+            log.success(f'Renamed {renamed_count} files successfully.')
+            log.debug(f'Updating lists...')
+            self.update_lists()
         else:
             log.debug('Nope! All good :D')
 
