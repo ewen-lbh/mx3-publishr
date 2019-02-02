@@ -43,8 +43,13 @@ def sql_get_query(data):
     for key, placeholder in data_scheme.items():
         data_scheme[key] = scheme(placeholder, data)
     return sql_query_scheme(data_scheme)
-    
 
+# CLI: apply a terminal styling code
+def color_text(text, color):
+    if color not in CLI_STYLING_CODES:
+        raise ValueError(f'\'{color}\' is not available. Look for the CLI_COLORS constant.')
+    else:
+        return CLI_STYLING_CODES[color]+text+CLI_STYLING_CODES['ENDC']
 
 # takes seconds to turn them into HH:mm:ss
 # credit: https://arcpy.wordpress.com/2012/04/20/146/
@@ -83,8 +88,8 @@ def addext(filename, ext):
 def rmext(filename):
     return re.sub(r'(\.\w+)','',filename)
 
-def chext(filename, newext):
-    return addext(rmext(filename), newext)
+def chext(filename, new_extension):
+    return addext(rmext(filename), new_extension)
 
 def truncate(string, max_length, append=''):
     if len(string) > max_length:

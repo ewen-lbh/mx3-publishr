@@ -1,6 +1,7 @@
 from imports import *
 import os
 import re
+DELETE_VIDEO = False
 
 userdata = {
     'kind' : 'album',
@@ -20,7 +21,7 @@ def init(Data_obj):
     del coverartsqr
 
     # remove a video if none is missing
-    if len(Data_obj.video.missing()) <= 0:
+    if len(Data_obj.video.missing()) <= 0 and DELETE_VIDEO:
         try:
             os.remove(Data_obj.dirs.video+os.listdir(Data_obj.dirs.video)[0])
         except FileNotFoundError:

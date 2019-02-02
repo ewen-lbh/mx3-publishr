@@ -40,8 +40,10 @@ class Audio:
             'names' : [rmext(filename(i)) for i in paths]
         })
 
+    # todo preview changes before asking for confirmation
     def rename(self):
         # pattern checking variables
+        # todo use constants instead of hard-coded regex patterns
         regex_artistname = r'(.+) - (.+)'
         regex_full = r'(\d{2,}) - (.+) - (.+)'
 
@@ -89,6 +91,7 @@ class Audio:
         else:
             log.info('Nope! All good :D')
 
+    # todo fix "invalid date text" message
     def apply_metadata(self):
         # get date components for eyed3's custom Date() class
         date_y = int(datetime.date.today().strftime('%Y'))

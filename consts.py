@@ -99,7 +99,7 @@ DB_QUERY_SCHEME = f'INSERT INTO {DB_NAME}.{DB_TABLE} ([keys]) VALUES ([values])'
 COVERS_DESCRIPTION = f'Artwork by {SELF_NAME} - {SELF_WEBSITE["pretty"]}'
 
 # === CLI ===
-USER_INPUT_INDICATOR = ">> "
+USER_INPUT_INDICATOR = "  > "
 LOG_TYPES_WRAP = ('[', ']')
 LOG_TYPES = {
     "info": "i",
@@ -110,8 +110,46 @@ LOG_TYPES = {
     "question": "?",
     "fatal": "FATAL",
 }
+LOG_TYPES_COLORS = {
+    "info": "WHITE",
+    "debug": "DARK_GREY",
+    "success": "GREEN",
+    "warn": "DARK_YELLOW",
+    "error": "DARK_RED",
+    "question": "CYAN",
+    "fatal": "RED",
+}
+
+CLI_STYLING_CODES = {
+    'BLACK': '\033[30m',
+    'DARK_RED': '\033[31m',
+    'DARK_GREEN': '\033[32m',
+    'DARK_YELLOW': '\033[33m',
+    'DARK_BLUE': '\033[34m',
+    'DARK_MAGENTA': '\033[35m',
+    'DARK_CYAN': '\033[36m',
+    'GREY': '\033[37m',
+    'DARK_GREY': '\033[90m',
+    'RED': '\033[91m',
+    'GREEN': '\033[92m',
+    'YELLOW': '\033[93m',
+    'BLUE': '\033[94m',
+    'MAGENTA': '\033[95m',
+    'CYAN': '\033[96m',
+    'WHITE': '\033[97m',
+
+    'BOLD': '\033[1m',
+    'FAINT': '\033[2m',
+    'UNDERLINE': '\033[4m',
+    'BLINK': '\033[5m',
+    'FRAME': '\033[51m',
+    'CIRCLE' : '\033[52m',
+
+    'ENDC': '\033[0m'
+}
 SECTION_WRAP = ('==== ', ' ====')
 SECTION_UPPERCASE = True
+SECTION_COLOR = 'MAGENTA'
 
 # ===Features===
 
@@ -134,7 +172,7 @@ AUTO_ADD_SINGLE_SUFFIX = False
 SPECIAL_CHARS_COMPATIBILITY_LEVEL = 1
 
 # Verbose output: show debug logs (log.debug methods)
-VERBOSE_OUTPUT = False
+VERBOSE_OUTPUT = True
 
 # --- Special chars ---
 SPECIAL_CHARS = {}

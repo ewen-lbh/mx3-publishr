@@ -5,7 +5,7 @@ import sys
 
 class log:
     @staticmethod
-    def log(text, logtype, method='print'):
+    def log(text, logtype, method='print', colored=True):
         lines = text.split('\n')
         # get the indicator according to logtype and consts.
         indicator = LOG_TYPES_WRAP[0]+LOG_TYPES[logtype]+LOG_TYPES_WRAP[1]+' '
@@ -17,10 +17,15 @@ class log:
         del lines[0]
         for i, line in enumerate(lines):
             msg += '\n'+indent+line
+        # coloured output
+        plain = msg
+        if colored:
+            msg = CLI_STYLING_CODES[LOG_TYPES_COLORS[logtype]] + msg + CLI_STYLING_CODES['ENDC']
+
         if method == 'print':
             print(msg)
             with open('latest.log', 'a') as f:
-                f.write(msg+'\n')
+                f.write(plain+'\n')
 
         elif method == 'return':
             return msg
@@ -38,7 +43,7 @@ class log:
 
 
     @staticmethod
-    def fatal(text='Unknown Error', errmsg=None, exit_script=True):
+    def fatal(text='Unknown Error', exit_script=True):
         if exit_script: 
             sys.exit(log.log(text, 'fatal', method='return'))
         else:
@@ -52,6 +57,7 @@ class log:
     @staticmethod
     def section(section):
         if SECTION_UPPERCASE: section = section.upper()
+        section = color_text(section, SECTION_COLOR)
         print(f'\n\n\n{SECTION_WRAP[0]+section+SECTION_WRAP[1]}\n')
 
 
@@ -62,7 +68,7 @@ class ask:
         try:
             answer = input(USER_INPUT_INDICATOR)
         except KeyboardInterrupt:
-            sys.exit('Script closed.')
+            log.fatal('Script closed.')
         if not 'case_sensitive' in flags:
             answer = answer.lower()
         if not 'accept_non_ascii' in flags and not is_ascii(answer):
@@ -123,7 +129,6 @@ class ask:
         userdata['collection'] = ask.anything('Please enter the '+userdata['kind']+' name', flags=['case_sensitive'])
 
         return userdata
-
 
 # add missing log variants from LOG_TYPES if not defined yet
 for level in LOG_TYPES: 
