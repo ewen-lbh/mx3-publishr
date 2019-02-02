@@ -8,3 +8,6 @@ class YouTube:
         self.tags.extend([self.parent.artist, self.parent.collection, self.parent.kind])
         # add generic tags from consts
         self.tags += YOUTUBE_GENERIC_TAGS
+
+        from credentials__secure import YT_CREDENTIALS
+        self.credentials = YT_CREDENTIALS

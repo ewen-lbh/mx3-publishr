@@ -1,7 +1,11 @@
 __pycache__/*
-.gitattributes
-**/*.secure.py
-playground.py
-*.code-snippets
+
+**/*__secure*
 *vscode*
+*.code-snippets
 **/*TEMP_MPY*
+**/*.secure.py
+
+.gitattributes
+playground.py
+credentials.py
