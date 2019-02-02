@@ -61,7 +61,7 @@ def switch(var, binding):
         if var == key: return value
     return None
 
-# === Primitives handling ===
+# === Types & encodings handling ===
 def is_primitive(var):
     return type(var) in PRIMITIVE_TYPES
 
@@ -71,6 +71,10 @@ def get_primitive_vars(obj):
     for key, value in props.items():
         if is_primitive(value): primitives[key] = value
     return primitives
+
+# https://stackoverflow.com/questions/196345/
+def is_ascii(s):
+    return all(ord(c) < 128 for c in s)
 
 # === Filename manipulation ===
 def addext(filename, ext):
@@ -101,7 +105,7 @@ def cwd_path():
 def unix_slashes(path):
     return path.replace('\\','/')
 
-# === ARRAY SEARCHING ===
+# === ARRAY OPERATIONS ===
 # dig through an array, searching for a match against the nth letter of a string
 # return a double (index, value) of the first match, returns None if nothing found.
 # Primarly used for the 'shortcuts' option of cli.ask.choices()
@@ -109,3 +113,13 @@ def search_with_nth_char(array, search, nth=1):
     for i, v in enumerate(array):
         if search == v[nth-1]: return (i, v) 
     return None
+
+# return list of key-value pairs from dictionnary, following used_scheme parameter.
+# [k] = the keys
+# [v] = the values
+def kv_pairs(dictionnary, used_scheme="[k]: [v]"):
+    retlist = list()
+    for k, v in dictionnary.items():
+        string = scheme(used_scheme, {'k':k, 'v':v})
+        retlist.append(string)
+    return retlist

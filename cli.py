@@ -62,6 +62,8 @@ class ask:
             sys.exit('Script closed.')
         if not 'case_sensitive' in flags:
             answer = answer.lower()
+        if not 'accept_non_ascii' in flags and not is_ascii(answer):
+            log.fatal('The answer contains special characters.\nOnly ASCII characters are allowed for now.')
         return answer
 
 
@@ -97,15 +99,15 @@ class ask:
     @staticmethod
     def userdata():
         userdata = {}
-        # --- TRACK TYPE ---
-        userdata['type'] = ask.choices('Please enter the kind of track you want to publish',AVAIL_KINDS)
+        # --- TRACK KIND ---
+        userdata['kind'] = ask.choices('Please enter the kind of track you want to publish',AVAIL_KINDS, shortcuts=True)
         
         # --- GETTING ARTIST ---
         if AUTO_DETECT_OC:
-            is_oc = userdata['type'] != 'remix'
+            is_oc = userdata['kind'] != 'remix'
         else:
             # Ask if the artist != SELF_NAME (dont ask if its a remix, obviously)
-            if userdata['type'] != 'remix':
+            if userdata['kind'] != 'remix':
                 is_oc = ask.confirm('Did you ('+SELF_NAME+') created this from scratch ?')
             else:
                 is_oc = False
@@ -117,7 +119,7 @@ class ask:
             userdata['artist'] = ask.anything('Who did the original track ?')
             
         # --- COLLECTION NAME ---
-        userdata['collection'] = ask.anything('Please enter the '+userdata['type']+' name')
+        userdata['collection'] = ask.anything('Please enter the '+userdata['kind']+' name')
 
         return userdata
 
