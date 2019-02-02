@@ -3,8 +3,10 @@ import os
 import eyed3
 import datetime
 
+
 class Audio:
-    def get(self, what, filename):
+    @staticmethod
+    def get(what, filename):
         repl_group = {
             'tracknumber' : r'\1',
             'artist' : r'\2',
@@ -24,7 +26,7 @@ class Audio:
 
             if len(paths) > 0:
                 log.debug('Fetched files successfully')
-                if not 'silent' in options: log.success(f'{len(paths)} track(s) found!')
+                if 'silent' not in options: log.success(f'{len(paths)} track(s) found!')
 
             else: log.fatal(f'No files found in directory:\n{directory}')
         else:
@@ -51,7 +53,8 @@ class Audio:
         # if there are any tracks to rename...
         if len(to_be_renamed) > 0: 
             # ask for renaming confirmation...
-            renaming_confirmed = ask.confirm(f'Some files are not in a good naming format. Do you want to rename them automatically ?\nNote that the tracknumbers will be assigned randomly (though 2 files won\'t have the same number)')
+            renaming_confirmed = ask.confirm(f'Some files are not in a good naming format. Do you want to rename them automatically ?\n' +
+                                              'Note that the tracknumbers will be assigned randomly (though 2 files won\'t have the same number)')
             if not renaming_confirmed: log.fatal('User chose to close the script')
 
             # tracking variables
@@ -64,11 +67,13 @@ class Audio:
             # for each file to be renamed
             for i, filename in enumerate(to_be_renamed):
                 # format cases handling
+                track_no = intpadding(i + 1)
                 if re.match(regex_artistname, filename):
-                    renamed = intpadding(i+1)+' - '+filename # we add +1 to the index to avoid having a "00" tracknumber.
+                    # we add +1 to the index to avoid having a "00" tracknumber.
+                    renamed = track_no + ' - ' + filename
                     log.warn(f'Assumed "{filename}" is of format <artist> - <track>')
                 else:
-                    renamed = intpadding(i+1)+' - '+artist+' - '+filename # we add +1 to the index to avoid having a "00" tracknumber.
+                    renamed = track_no + ' - ' + artist + ' - ' + filename
                     log.warn(f'Assumed "{filename}" is of format <track>')
 
                 # renaming
@@ -86,15 +91,15 @@ class Audio:
 
     def apply_metadata(self):
         # get date components for eyed3's custom Date() class
-        date_Y = int(datetime.date.today().strftime('%Y'))
+        date_y = int(datetime.date.today().strftime('%Y'))
         date_m = int(datetime.date.today().strftime('%m'))
         date_d = int(datetime.date.today().strftime('%d'))
 
         metadata = {
-            "artist" : self.parent.artist,
-            "album" : self.parent.collection,
-            "cover path" : self.parent.cover.get('square'),
-            "date" : f'{date_d}/{date_m}/{date_Y}'
+            "artist": self.parent.artist,
+            "album": self.parent.collection,
+            "cover path": self.parent.cover.get('square'),
+            "date": f'{date_d}/{date_m}/{date_y}'
         }
         log.info('Metadata to apply:\n'+'\n'.join(kv_pairs(metadata)))
 
@@ -111,7 +116,7 @@ class Audio:
             # track number (current, total)
             audiofile.tag.track_num = (self.get('tracknumber', filename(filepath)), len(self.lists['paths']))
             # release date YYYY-MM-dd
-            audiofile.tag.original_release_date = audiofile.tag.release_date = audiofile.tag.recording_date = eyed3.core.Date(date_Y, month=date_m, day=date_d)
+            audiofile.tag.original_release_date = audiofile.tag.release_date = audiofile.tag.recording_date = eyed3.core.Date(date_y, month=date_m, day=date_d)
             # album arts (type, imagedata, imagetype, description)
             audiofile.tag.images.set = (3, metadata['cover path'], 'image/png', COVERS_DESCRIPTION)
 
@@ -120,7 +125,7 @@ class Audio:
                 audiofile.tag.save()
             except Exception as e:
                 log.error('@eyed3:'+str(e))
-            
+
         log.success('Applied metadata to all audio files')
 
     def __init__(self, parentself):

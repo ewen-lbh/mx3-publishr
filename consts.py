@@ -171,7 +171,7 @@ def _list_logvariants():
         logvariants += f'             - "{LOG_TYPES_WRAP[0]+str(v)+LOG_TYPES_WRAP[1]}" {k}\n'
     return logvariants
 
-
+# TODO move this out of consts
 WATERMARK = """
 
    `::::::::::::::::::.                      -:::::::::::::::::-`       

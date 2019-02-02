@@ -1,6 +1,7 @@
 from utils import *
 import os
 
+
 class Data:
     from Data_Dirs import Dirs
     from Data_Cover import Cover
@@ -23,7 +24,7 @@ class Data:
             setattr(self, k, v)
         
         # define inner classes and passes parent self to them
-        self.dirs  = self.Dirs (self)
+        self.dirs  = self.Dirs(self)
         self.cover = self.Cover(self)
         self.audio = self.Audio(self)
         self.video = self.Video(self)
