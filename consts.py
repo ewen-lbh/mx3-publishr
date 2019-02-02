@@ -6,7 +6,7 @@ PRIMITIVE_TYPES = (int, str, bool, float, dict, set, list)
 ENV = 'prod'
 
 # === FILES ===
-PATH_DRIVE = '/mnt/d'
+PATH_DRIVE = 'D:'
 BASEPATHS = {}
 FILENAME_SCHEMES = {}
 # Cover art consts

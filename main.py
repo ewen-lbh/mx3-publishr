@@ -83,7 +83,7 @@ log.new_step()
 missing_vids = track.video.missing()
 if len(missing_vids) > 0:
     missing_vids_str = '\n'.join(
-        [chext(filename(i), 'mp4') for i in missing_vids])
+        [re.sub(f'3$', r'4', filename(i)) for i in missing_vids]) # display video file names
     log.warn(f'{len(missing_vids)} video(s) missing:\n{missing_vids_str}')
     video_creation_confirmed = ask.confirm(
         'Want to generate videos automatically ? (this will take quite some time)\nNote that you can use Ctrl-C at any time to stop the script, if the video creation process gets too long or stuck.\nIf it gets stuck, please report the issue on github (ewen-lbh/mx3-publishr)')
@@ -91,6 +91,6 @@ if len(missing_vids) > 0:
         for filename in missing_vids:
             track.video.create(filename)
     else:
-        log.fatal('Action cancelled.')
+        log.debug('Video creation step skipped. Your album will not be uploaded to YouTube.')
 else:
     log.info('All videos found! \nThis saved you a sh*t ton of processing time :D')
