@@ -56,7 +56,7 @@ track = Data(userdata)
 # recreate non-ideal situation to test audio files renaming, cover art & video generation
 if ENV == 'dev':
     log.section('Debugging initial steps')
-    log.warn('Recreating unideal initial file conditions...')
+    log.warn('Recreating initial file conditions...')
     debug.init(track)
 
 log.section('Renaming audio files')
@@ -66,11 +66,6 @@ track.audio.rename()
 log.section('Applying metadata')
 # add metadata to audio files
 track.audio.apply_metadata()
-
-# show fetched tracks
-tracklist = '\n'.join(track.audio.lists['names'])
-log.info(f"Tracklist:\n{tracklist}")
-del tracklist
 
 
 # getting cover arts

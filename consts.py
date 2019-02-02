@@ -147,6 +147,7 @@ CLI_STYLING_CODES = {
 
     'ENDC': '\033[0m'
 }
+COLORED_TEXT_REGEX = r'.\[\d+m'
 SECTION_WRAP = ('==== ', ' ====')
 SECTION_UPPERCASE = True
 SECTION_COLOR = 'MAGENTA'

@@ -50,7 +50,7 @@ class Cover:
             top = newh
             direction_msg='in the center'
 
-        log.debug("Cropping "+direction_msg+'...')
+        log.info("Cropping "+direction_msg+'...')
 
         im.crop((left,bottom,right,top)).save(self.get('square'))
 
