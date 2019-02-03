@@ -1,6 +1,7 @@
 from imports import *
 # noinspection PyUnresolvedReferences
 import Data  # even tho I don't need this, color codes will not work w/o it.
+import webbrowser
 
 def arr2str(arr, glue='\n'):
     return glue.join(arr)
@@ -11,21 +12,24 @@ drc = CLI_STYLING_CODES['DARK_RED']
 yc = CLI_STYLING_CODES['YELLOW']
 c = CLI_STYLING_CODES['ENDC'] + CLI_STYLING_CODES['WHITE']
 USER_INPUT_INDICATOR = '    /'
-avail_cmds = ('list', 'set', 'reset', 'describe', 'help', 'enable', 'disable', 'get')
+avail_cmds = ('list', 'set', 'reset', 'describe', 'help', 'enable', 'disable', 'get', 'reset all','open')
 exit_cmds = ('exit', 'close', 'shutdown')
 
 
 commands_descriptions = {
     'List all settings': f'{cc}list{c}',
+    'Open config file': f'{cc}open{c}\nOpen the config file for manual editing.\nUseful for editing dicts/lists that span across multiple lines',
     'Set': f'{cc}<settings name> = <value>{c}',
     'Enable/Disable' : f'{cc}<enable|disable> <setting name>{c}\nEquivalent to <setting name> = <True|False>',
     'Get': f'{cc}<setting name>{c}',
-    'Reset': f'{cc}reset <setting name>{c}\nNote that the default values are the one set in {yc}consts.py{c} at the start of the script',
-    'Describe' : f'{cc}describe <setting name>{c}\n{drc}WORK IN PROGRESS, Not functionnal yet{c}\nGet description of setting by looking at comments above the const definition.\nReturn "undefined" when no comments are found',
+    'Reset': f'{cc}reset <setting name|*>{c}\nNote that the default values are the one set in {yc}consts.py{c} at the start of the script\nTo reset all settings, use {cc}reset *{c} or {cc}reset all{c}',
+    'Describe' : f'{cc}describe <setting name>{c}\n{drc}NOT FUNCTIONAL FOR NOW{c}\nGet description of setting by looking at comments above the const definition.\nReturn "undefined" when no comments are found',
     'Show this': f'{cc}help{c}',
 }
-
 log.section("Configuration wizard")
+log.warn(f"""WARNING: THIS SCRIPT IS STILL BUGGY
+ITS RECOMMENDED TO EDIT MANUALLY THE SETTINGS FILE
+USING THE COMMAND {c}/{cc}open{c}""")
 help = f"""=== Commands:
 
 """+arr2str(kv_pairs(commands_descriptions, '[k] --> /[v]', end='\n'))+f"""
@@ -66,6 +70,12 @@ def parse(cmd):
         func = tokens[0]
     return func, args
 
+
+def consts_open():
+    log.debug(f'Opening {yc}consts.py{c}')
+    webbrowser.open('consts.py')
+
+
 def exec(stuff):
     func, args_list = stuff
     if func == 'list':
@@ -82,6 +92,8 @@ def exec(stuff):
         set_const((args_list, 'False'))
     elif func == 'reset':
         reset(args_list)
+    elif func == 'open':
+        consts_open()
     else:
         log.error('Command not found.')
 
@@ -90,6 +102,9 @@ def quote(string):
 
 
 def get_consts(method="log"):
+    if method == 'raw':
+        with open('consts.py','r',encoding='utf8') as f:
+            return f.read()
     consts = [i for i in open('consts.py', 'r', encoding='utf8') if re.match('[A-Z_]+ = .+', i)]
     colored = list()
     props = list()
@@ -108,6 +123,7 @@ def get_consts(method="log"):
 
 reset_map = get_consts('return')
 avail_props = reset_map.keys()
+original_data = get_consts('raw')
 
 def set_const(args):
     name = args[0]
@@ -126,7 +142,7 @@ def set_const(args):
                 raw_datas[i] = re.sub(f'({const_name} = )([^=]+)', r'\1' + value, l)
                 success = True
 
-        with open('test.txt', 'w', encoding='utf8') as f:
+        with open('consts.py', 'w', encoding='utf8') as f:
             f.write(''.join(raw_datas))
 
         if not success: log.error(f'"{name}" setting not found')
@@ -151,8 +167,16 @@ def show_help():
     log.info(help)
 
 def reset(args):
-    set_const([args, reset_map[args]])
+    if args in ('*','all'):
+        reset_all()
+    else:
+        set_const([args, reset_map[args]])
 
+def reset_all():
+    global original_data
+    with open('consts.py', 'w', encoding='utf8') as f:
+        f.write(original_data)
+        log.info('All data has been reset.')
 
 
 

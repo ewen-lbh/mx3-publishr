@@ -1,10 +1,11 @@
 # === CORE ===
-TEST = False
 PRIMITIVE_TYPES = (int, str, bool, float, dict, set, list)
 
 # === ENV ===
-# set to 'prod' when using the script normally.
-ENV = 'prod'
+# testing mode: set to true while testing/debugging
+TESTING_MODE = False
+# backwards support
+ENV = 'dev' if TESTING_MODE else 'prod'
 
 # === FILES ===
 PATH_DRIVE = 'D:'
@@ -175,9 +176,7 @@ AUTO_ADD_SINGLE_SUFFIX = False
 SPECIAL_CHARS_COMPATIBILITY_LEVEL = 1
 
 # Verbose output: show debug logs (log.debug methods)
-VERBOSE_OUTPUT = True
-
-# --- Special chars ---
+VERBOSE_OUTPUT = False# --- Special chars ---
 SPECIAL_CHARS = {}
 
 if SPECIAL_CHARS_COMPATIBILITY_LEVEL >= 0:
