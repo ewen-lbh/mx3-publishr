@@ -3,9 +3,9 @@ PRIMITIVE_TYPES = (int, str, bool, float, dict, set, list)
 
 # === ENV ===
 # testing mode: set to true while testing/debugging
-TESTING_MODE = False
-# backwards support
-ENV = 'dev' if TESTING_MODE else 'prod'
+TESTING_MODE = True
+
+
 
 # === FILES ===
 PATH_DRIVE = 'D:'
@@ -153,9 +153,7 @@ COLORED_TEXT_REGEX = r'.\[\d+m'
 SECTION_WRAP = ('==== ', ' ====')
 SECTION_UPPERCASE = True
 SECTION_COLOR = 'BLUE'
-LISTS_ACCENT_COLOR = 'YELLOW'
-
-# ===Features===
+LISTS_ACCENT_COLOR = 'DARK_BLUE'# ===Features===
 
 # Don't ask if you created the track or not
 # (ask the artist only if userdata['track'] equals 'remix')
@@ -176,7 +174,8 @@ AUTO_ADD_SINGLE_SUFFIX = False
 SPECIAL_CHARS_COMPATIBILITY_LEVEL = 1
 
 # Verbose output: show debug logs (log.debug methods)
-VERBOSE_OUTPUT = False# --- Special chars ---
+VERBOSE_OUTPUT = True
+
 SPECIAL_CHARS = {}
 
 if SPECIAL_CHARS_COMPATIBILITY_LEVEL >= 0:
@@ -205,10 +204,11 @@ def _list_logvariants():
     logvariants = str()
     for k in LOG_TYPES:
         v = LOG_TYPES[k]
+        orig_k = k
         k = k.title()
         if k == 'Debug' and not VERBOSE_OUTPUT:
             k += ' (deactivated)'
-        logvariants += f'             - "{LOG_TYPES_WRAP[0]+str(v)+LOG_TYPES_WRAP[1]}" {k}\n'
+        logvariants += f'{CLI_STYLING_CODES[LOG_TYPES_COLORS[orig_k]]}             - "{LOG_TYPES_WRAP[0]+str(v)+LOG_TYPES_WRAP[1]}" {k}{CLI_STYLING_CODES["ENDC"]}\n'
     return logvariants
 
 # TODO move this out of consts
@@ -251,6 +251,11 @@ WATERMARK = """
             
                   In the same way, "%(userinput)s" indicates that 
                          user input is requested.
+                         
+To change something in the config, you can use the (work in progress) config wizard.
+                     Type %(cc)s/config%(c)s at any time to open it.
+                     To close it, type %(cc)s/close%(c)s at any time. 
+ Note that when you close the config wizard, the script reruns from the beginning.
             
                            %(rArr)s  Let's start!
             
@@ -259,7 +264,9 @@ WATERMARK = """
     'logwrap_r' : LOG_TYPES_WRAP[1],
     'userinput': USER_INPUT_INDICATOR,
     'rArr': SPECIAL_CHARS['rArr'],
-    'logvariants_list': _list_logvariants()
+    'logvariants_list': _list_logvariants(),
+    'cc' : CLI_STYLING_CODES['CYAN'],
+    'c' : CLI_STYLING_CODES['ENDC']
 }
 
 del _list_logvariants

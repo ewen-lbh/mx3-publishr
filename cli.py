@@ -1,4 +1,4 @@
-from consts import *
+import configurator
 from utils import *
 import sys
 
@@ -86,7 +86,13 @@ class ask:
         # add answer to logs
         with open('latest.log', 'a') as f:
             f.write(USER_INPUT_INDICATOR+answer+'\n')
-        return answer
+        if answer == '/config':
+            import main
+            configurator.run(on_exit=main.main)
+        elif answer == '/exit':
+            log.fatal('Script closed.')
+        else:
+            return answer
 
 
     @staticmethod
