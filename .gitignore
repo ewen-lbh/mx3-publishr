@@ -10,3 +10,4 @@ __pycache__/*
 playground.py
 credentials.py
 latest.log
+test.txt

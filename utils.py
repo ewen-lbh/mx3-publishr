@@ -55,9 +55,6 @@ def strip_color_text(text):
     return re.sub(COLORED_TEXT_REGEX, '', text)
 
 
-def strip_color_text(text):
-    return re.sub(COLORED_TEXT_REGEX, '', text)
-
 # takes seconds to turn them into HH:mm:ss
 # credit: https://arcpy.wordpress.com/2012/04/20/146/
 def duration_format(sec_elapsed):
