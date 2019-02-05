@@ -13,7 +13,8 @@ def main():
     importlib.reload(c)
     log.watermark()
     # latest.log header
-    with open('latest.log', 'w') as f:
+    os.chdir(cwd_path()) # the zip generation step changes directory, so we need to change it back while logging
+    with open(cwd_path()+'latest.log', 'w') as f:
         f.write(f'====== log generated {datetime.date.today().strftime("%B %d, %Y")} ======\n\n\n'.upper())
         f.write(c.WATERMARK)
 

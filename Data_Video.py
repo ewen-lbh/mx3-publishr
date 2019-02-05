@@ -7,9 +7,9 @@ class Video:
     def __init__(self, parentself):
         self.parent = parentself
 
-    # returns audio filepaths of tracks that doesn't have videos
+    # returns audio file paths of tracks that doesn't have videos
     def missing(self):
-        # if the video folder isnt there, create one and return all tracks as videos to make (since no video exists)
+        # if the video folder isn't there, create one and return all tracks as videos to make (since no video exists)
         if not os.path.isdir(self.parent.dirs.video): 
             log.warn('Video folder path not found, creating one...')
             os.mkdir(self.parent.dirs.video)
@@ -24,8 +24,8 @@ class Video:
 
     def create(self, audio, **kwargs):
         img = self.parent.cover.get('landscape')
-        videofilename = self.parent.audio.get('name', rmext(filename(audio)))+'.mp4'
-        destfolder = self.parent.dirs.video
+        video_file_name = self.parent.audio.get('name', rmext(filename(audio)))+'.mp4'
+        dest_folder = self.parent.dirs.video
         try: fps = kwargs['fps']
         except KeyError: fps = 30
 
@@ -44,8 +44,8 @@ class Video:
         log.debug('Combining image and audio...')
         video = image.set_audio(audio)
 
-        log.info(f'Writing file to "{videofilename}" with {fps} fps...')
+        log.info(f'Writing file to "{video_file_name}" with {fps} fps...')
         start_time = time.time()
-        video.write_videofile(destfolder+videofilename, fps=fps, codec='libx264')
+        video.write_videofile(dest_folder+video_file_name, fps=fps, codec='libx264')
         end_time = time.time()
-        log.success(f'Done!\nThe video {videofilename} took {duration_format(end_time - start_time)} to make')
+        log.success(f'Done!\nThe video {video_file_name} took {duration_format(end_time - start_time)} to make')

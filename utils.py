@@ -87,13 +87,13 @@ def is_ascii(s):
 
 # === Filename manipulation ===
 def getext(filename):
-    return re.sub(r'(\.\w+)$',r'\1',filename)
+    return re.sub(r'(\.\w+)$', r'\1', filename.strip())
 
 def addext(filename, ext):
     return f'{filename}.{ext}'
 
 def rmext(filename):
-    return re.sub(r'(\.\w+)','',filename)
+    return re.sub(r'(\.\w+)', '', filename)
 
 def chext(filename, new_extension):
     return addext(rmext(filename), new_extension)
@@ -105,7 +105,10 @@ def truncate(string, max_length, append=''):
         return string
 
 def filename(path):
-    return re.sub(r'(?:(?:.+)\/)+([^\/]+\.\w{3})$',r'\1',path)
+    return re.sub(r'(?:(?:.+)/)+([^/]+\.\w{3})$', r'\1', path)
+
+def is_supported_audio_file(filename):
+    return getext(filename) in SUPPORTED_AUDIO_FORMATS
 
 # get tracknumber from file name
 def tracknumber(filename):
@@ -115,7 +118,7 @@ def cwd_path():
     return unix_slashes(os.getcwd())+'/'
 
 def unix_slashes(path):
-    return path.replace('\\','/')
+    return path.replace('\\', '/')
 
 # === ARRAY OPERATIONS ===
 # dig through an array, searching for a match against the nth letter of a string
@@ -123,7 +126,7 @@ def unix_slashes(path):
 # Primarly used for the 'shortcuts' option of cli.ask.choices()
 def search_with_nth_char(array, search, nth=1):
     for i, v in enumerate(array):
-        if search == v[nth-1]: return (i, v) 
+        if search == v[nth-1]: return i, v
     return None
 
 # return list of key-value pairs from dictionnary, following used_scheme parameter.
@@ -163,7 +166,7 @@ def kv_pairs(dictionnary,
 
     # Centering
     def spaces_to_add(string, separator=None):
-        # get the difference of lenght between the dictionnary's longest key and the current string
+        # get the difference of length between the dictionary's longest key and the current string
         nb_spaces = len(max(dictionnary.keys(), key=len)) - len(string)
         # add separator to count if set
         if separator is not None: nb_spaces += len(separator)

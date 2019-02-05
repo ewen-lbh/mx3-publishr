@@ -1,3 +1,4 @@
+import glob
 import webbrowser
 import zipfile
 
@@ -25,7 +26,7 @@ class Audio:
 
         if os.path.isdir(directory):
             if 'silent' not in options: log.debug('Fetching files in directory...')
-            paths = [directory+i for i in os.listdir(directory) if is_ascii(i)]
+            paths = [directory+i for i in os.listdir(directory) if os.path.isfile(directory+i) and is_ascii(i)]
 
             if len(paths) > 0:
                 if 'silent' not in options:
@@ -43,7 +44,7 @@ class Audio:
             'names' : [rmext(filename(i)) for i in paths]
         })
 
-    # todo preview changes before asking for confirmation
+
     def rename(self):
         # pattern checking variables
         # todo use constants instead of hard-coded regex patterns
@@ -52,8 +53,7 @@ class Audio:
 
         # getting tracks to rename
         log.info('Fetching tracklist for filename correction...')
-        filenames = os.listdir(self.parent.dirs.audio)
-        to_be_renamed = [i for i in filenames if not re.match(regex_full, i)]
+        to_be_renamed = [i for i in self.lists['filenames'] if not re.match(regex_full, rmext(i))]
 
         # if there are any tracks to rename...
         if len(to_be_renamed) > 0:
@@ -159,16 +159,17 @@ class Audio:
         log.info(f'The archive "{zip_file_name}" will be created')
         # create paths list from audio directory, filenames from listdir function
         # todo add them only if they are a supported audio file format
-        paths = [self.parent.dirs.audio + f_name for f_name in os.listdir(self.parent.dirs.audio)]
 
         # Create directory if it doesn't exists
         if not os.path.isdir(zip_file_dir): os.mkdir(zip_file_dir)
 
         with zipfile.ZipFile(zip_file_dir+zip_file_name, 'w') as zip_file:
-            for path in paths:
+            for path in self.lists['paths']:
                 log.debug(f'Adding {filename(path)} to the archive...')
-                zip_file.write(path)
+                os.chdir(self.parent.dirs.audio)
+                zip_file.write(filename(path))
         log.success(f'Created full {self.parent.kind} zip file successfully !')
+        os.chdir(cwd_path())
 
         if ask.confirm('Open the zip file ?'):
             webbrowser.open(zip_file_dir+zip_file_name)

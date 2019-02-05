@@ -1,3 +1,5 @@
+import shutil
+
 from imports import *
 import os
 import re
@@ -28,10 +30,17 @@ def init(Data_obj):
 
     # rename audio files badly
     renamed_files_map = dict()
-    for fname in os.listdir(Data_obj.dirs.audio):
+    for fname in Data_obj.audio.lists['filenames']:
         orig = Data_obj.dirs.audio+fname
         dest = Data_obj.dirs.audio+re.sub(r'(\w{2,}) - (.+) - (.+\.mp3)', r'\3', fname)
         renamed_files_map[filename(orig)] = filename(dest)
         os.rename(orig, dest)
+
+    # delete zip file
+    log.debug('Deleting the full album zip file')
+    if os.path.isdir(Data_obj.dirs.audio+'full'): shutil.rmtree(Data_obj.dirs.audio+'full')
+
+    # update lists
+    Data_obj.audio.update_lists()
 
     log.info('Renamed following files:\n'+'\n'.join(kv_pairs(renamed_files_map, '/cArrow')))
