@@ -1,10 +1,12 @@
 __pycache__/*
+.vscode/*
+.idea/*
 
 **/*__secure*
-*vscode*
 *.code-snippets
 **/*TEMP_MPY*
 **/*.secure.py
+*.log
 
 .gitattributes
 playground.py

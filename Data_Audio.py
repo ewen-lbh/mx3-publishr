@@ -1,3 +1,6 @@
+import webbrowser
+import zipfile
+
 from imports import *
 import os
 import eyed3
@@ -148,3 +151,24 @@ class Audio:
             self.lists['paths'] = self.fetch_tracks('paths')
         self.lists['filenames'] = [filename(i) for i in self.lists['paths']]
         self.lists['names'] = [rmext(i) for i in self.lists['filenames']]
+
+    def make_zip_file(self):
+        # define vars
+        zip_file_dir  = self.parent.dirs.audio+'full/'
+        zip_file_name = f'{self.parent.artist} - {self.parent.collection} (Full {self.parent.kind}).zip'
+        log.info(f'The archive "{zip_file_name}" will be created')
+        # create paths list from audio directory, filenames from listdir function
+        # todo add them only if they are a supported audio file format
+        paths = [self.parent.dirs.audio + f_name for f_name in os.listdir(self.parent.dirs.audio)]
+
+        # Create directory if it doesn't exists
+        if not os.path.isdir(zip_file_dir): os.mkdir(zip_file_dir)
+
+        with zipfile.ZipFile(zip_file_dir+zip_file_name, 'w') as zip_file:
+            for path in paths:
+                log.debug(f'Adding {filename(path)} to the archive...')
+                zip_file.write(path)
+        log.success(f'Created full {self.parent.kind} zip file successfully !')
+
+        if ask.confirm('Open the zip file ?'):
+            webbrowser.open(zip_file_dir+zip_file_name)

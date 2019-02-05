@@ -89,6 +89,9 @@ class ask:
         if answer == '/config':
             import main
             configurator.run(on_exit=main.main)
+        elif answer == '/reload':
+            import main
+            main.main()
         elif answer == '/exit':
             log.fatal('Script closed.')
         else:
@@ -99,24 +102,28 @@ class ask:
     def choices(text, choices, **options):
 
         choicestr = '/'.join(choices)
-        
+        orig_choices = choices
+
         if 'shortcuts' in options:
-            orig_choices = choices
             choices = [i[0] for i in choices]
-            text += f'\nyou can use only the first letter to make your choice, eg. "{choices[0]}" = "{orig_choices[0]}"'
+            text += f'\nyou can use only the first letter to make your choice, eg. "{choices[0]}" => "{orig_choices[0]}"'
 
         text += '\n('+choicestr+')'
 
         answer = ask.anything(text)
 
-        if 'shortcuts' in options: answer = answer[0]
+        if 'shortcuts' in options:
+            answer_shortcut = answer[0]
 
         while answer not in choices:
             log.error('"'+answer+'" is not a valid answer, retrying...')
             answer = ask.anything(text)
+            if 'shortcuts' in options:
+                answer_shortcut = answer[0]
 
-        if 'shortcuts' in options: answer = search_with_nth_char(orig_choices, answer)[1]
-        return answer
+        if 'shortcuts' in options: answer_shortcut = search_with_nth_char(orig_choices, answer_shortcut)[1]
+        return answer_shortcut if 'shortcuts' in options else answer
+
     @staticmethod
     def confirm(text):
         answer = ask.choices(text, ['y', 'n'])
@@ -145,7 +152,7 @@ class ask:
             userdata['artist'] = ask.anything('Who did the original track ?', flags=['case_sensitive'])
             
         # --- COLLECTION NAME ---
-        userdata['collection'] = ask.anything('Please enter the '+userdata['kind']+' name', flags=['case_sensitive'])
+        userdata['collection'] = ask.anything('Please enter the '+userdata['kind']+'\'s title', flags=['case_sensitive'])
 
         return userdata
 

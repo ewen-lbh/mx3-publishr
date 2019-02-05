@@ -1,13 +1,12 @@
 # === CORE ===
+import pyfiglet
+
+
 PRIMITIVE_TYPES = (int, str, bool, float, dict, set, list)
 
 # === ENV ===
 # testing mode: set to true while testing/debugging
-TESTING_MODE = True
-
-
-
-# === FILES ===
+TESTING_MODE = True# === FILES ===
 PATH_DRIVE = 'D:'
 BASEPATHS = dict()
 FILENAME_SCHEMES = dict()
@@ -26,6 +25,7 @@ VIDEOS_FILENAME_REGEX = r'(.+) - (.+)\.\w{3,}'
 BASEPATHS['audio'] = PATH_DRIVE + '/Users/ewenl/Documents/Image-Line/Data/FL Studio/Projects/#DONE/'
 FILENAME_SCHEMES['audio'] = '[tracknumber] - [artist] - [track].mp3'
 AUDIOS_FILENAME_REGEX = r'(\d{2,}) - (.+) - (.+)\.\w{3,}$'
+SUPPORTED_AUDIO_FORMATS = ['.mp3']
 
 # === FIELDS ===
 # Common to [artist], [track] and [collection]
@@ -107,7 +107,7 @@ LOG_TYPES = {
     "debug": "D",
     "success": "S",
     "warn": "!",
-    "error": "E",
+    "error": "x",
     "question": "?",
     "fatal": "FATAL",
 }
@@ -150,10 +150,12 @@ CLI_STYLING_CODES = {
     'ENDC': '\033[0m'
 }
 COLORED_TEXT_REGEX = r'.\[\d+m'
-SECTION_WRAP = ('==== ', ' ====')
+SECTION_WRAP = (' ', ' ')
 SECTION_UPPERCASE = True
 SECTION_COLOR = 'BLUE'
-LISTS_ACCENT_COLOR = 'DARK_BLUE'# ===Features===
+LISTS_ACCENT_COLOR = 'DARK_CYAN'
+
+# ===Features===
 
 # Don't ask if you created the track or not
 # (ask the artist only if userdata['track'] equals 'remix')
@@ -175,7 +177,6 @@ SPECIAL_CHARS_COMPATIBILITY_LEVEL = 1
 
 # Verbose output: show debug logs (log.debug methods)
 VERBOSE_OUTPUT = True
-
 SPECIAL_CHARS = {}
 
 if SPECIAL_CHARS_COMPATIBILITY_LEVEL >= 0:
@@ -208,65 +209,48 @@ def _list_logvariants():
         k = k.title()
         if k == 'Debug' and not VERBOSE_OUTPUT:
             k += ' (deactivated)'
-        logvariants += f'{CLI_STYLING_CODES[LOG_TYPES_COLORS[orig_k]]}             - "{LOG_TYPES_WRAP[0]+str(v)+LOG_TYPES_WRAP[1]}" {k}{CLI_STYLING_CODES["ENDC"]}\n'
+        logvariants += f'{CLI_STYLING_CODES[LOG_TYPES_COLORS[orig_k]]} - "{LOG_TYPES_WRAP[0]+str(v)+LOG_TYPES_WRAP[1]}" {k}{CLI_STYLING_CODES["ENDC"]}\n'
     return logvariants
 
+
 # TODO move this out of consts
-WATERMARK = """
-
-   `::::::::::::::::::.                      -:::::::::::::::::-`       
-   -NNNNNNNNNNNNNNNNNNs  `:yy-        `/ys. `yNNNNNNNNNNNNNNNMMd.       
-   -MMMdyyyNMMNhyydMMMy  :dMMNy-    `/hNMNy.`+yyyyyyydMMMMMMMMMm-       
-   -MMMs  `yMMm-  -NMMs   .sNMMNs-`:yNMMd+.          `+dMMMMMMMm-       
-   -MMMy` `yMMm-  -NMMs     .sNMMNdNMMd+.   `/+++++++++odMMMMMMm-       
-   -MMMMh:`yMMm-  -NMMs       -dMMMMMy.     `yMMMMMMMMMMMMMMMMMm-       
-   -MMMMMNhdMMm-  -NMMs     `:yNMMNMMNs.     :oooooooooooooomMMm-    _       
-   -MMMMMMMMMMm-  -NMMs   `:yNMMdo:sNMMNs.                 `yMMm-   ( )  ___ 
-   -MMMMMMMMMMN+  -NMMs  -yNMMmo.   -yNMMmo``+sssssssssssssymMMm-   |/  / __|
-   -NMMMMMMMMMMNy--NMMs  .smmo-       -yNd+``yMMMMMMMMMMMMMMMMMm-       \__ \\
-   `:////////////:.://-    ..           ..   -/////////////////:`       |___/   
-                                                                                                                                                                
-.______    __    __  .______    __       __       _______. __    __  .______      
-|   _  \  |  |  |  | |   _  \  |  |     |  |     /       ||  |  |  | |   _  \     
-|  |_)  | |  |  |  | |  |_)  | |  |     |  |    |   (----`|  |__|  | |  |_)  |    
-|   ___/  |  |  |  | |   _  <  |  |     |  |     \   \    |   __   | |      /     
-|  |      |  `--'  | |  |_)  | |  `----.|  | .----)   |   |  |  |  | |  |\  \----.
-| _|       \______/  |______/  |_______||__| |_______/    |__|  |__| | _| `._____|    
-
-                       Get music out, without trouble.
+WATERMARK_FONT = 'ogre'
+WATERMARK = pyfiglet.figlet_format("publishr", font=WATERMARK_FONT)+"""
+Get music out, without trouble.
 
                              
-                             ====WEBSITE====
-                            mx3creations.com
+{headerc}WEBSITE{c}
+mx3creations.com
 
-                           ====REPOSITORY====
-                     github.com/ewen-lbh/mx3-publishr
+{headerc}REPOSITORY{c}
+github.com/ewen-lbh/mx3-publishr
             
-                       ====SCRIPT INFORMATIONS====
-                  Each message is preceded by %(logwrap_l)s<character>%(logwrap_r)s.
-           The <character> indicates the type of message you're getting.
+{headerc}LOG TYPES{c}
+Each message is preceded by {logwrap_l}x{logwrap_r}.
+The [x] indicates the type of message you're getting.
             
-                      Here's the list of all characters:
-%(logvariants_list)s
+Here's the list of all characters:
+{logvariants_list}
             
-                  In the same way, "%(userinput)s" indicates that 
-                         user input is requested.
-                         
+In the same way, "{userinput}" indicates that 
+user input is requested.
+
+{headerc}CONFIGURATION{c}              
 To change something in the config, you can use the (work in progress) config wizard.
-                     Type %(cc)s/config%(c)s at any time to open it.
-                     To close it, type %(cc)s/close%(c)s at any time. 
- Note that when you close the config wizard, the script reruns from the beginning.
+Type {cc}/config{c} at any time to open it, and {cc}/close{c} to close it.
+Note that when you close the config wizard, the script reruns from the beginning.
             
-                           %(rArr)s  Let's start!
+{rArr}  Let's start!
             
-""" % {
-    'logwrap_l': LOG_TYPES_WRAP[0],
-    'logwrap_r' : LOG_TYPES_WRAP[1],
-    'userinput': USER_INPUT_INDICATOR,
-    'rArr': SPECIAL_CHARS['rArr'],
-    'logvariants_list': _list_logvariants(),
-    'cc' : CLI_STYLING_CODES['CYAN'],
-    'c' : CLI_STYLING_CODES['ENDC']
-}
+""" .format(
+    logwrap_l=LOG_TYPES_WRAP[0],
+    logwrap_r=LOG_TYPES_WRAP[1],
+    userinput=USER_INPUT_INDICATOR.strip(),
+    rArr=SPECIAL_CHARS['rArr'],
+    logvariants_list=_list_logvariants(),
+    cc=CLI_STYLING_CODES['CYAN'],
+    c=CLI_STYLING_CODES['ENDC'],
+    headerc=CLI_STYLING_CODES[SECTION_COLOR]
+)
 
 del _list_logvariants

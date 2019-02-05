@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from Data import *
 import debug
 import glob
@@ -62,6 +64,7 @@ def main():
 
     log.section('Renaming audio files')
     # rename tracks badly named
+    # TODO don't show this section if no files to rename
     track.audio.rename()
 
     log.section('Applying metadata')
@@ -99,6 +102,11 @@ def main():
             log.debug('Video creation step skipped. Your album will not be uploaded to YouTube.')
     else:
         log.info('All videos found! \nThis saved you a sh*t ton of processing time :D')
+
+    if track.kind in COLLECTION_KINDS:
+        log.section(f'Full {track.kind} zip file')
+        # pprint(vars(track))
+        track.audio.make_zip_file()
 
 
 if __name__ == '__main__':
