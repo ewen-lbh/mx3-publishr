@@ -13,10 +13,10 @@ def main():
     importlib.reload(c)
     log.watermark()
     # latest.log header
-    os.chdir(cwd_path())
-    with open(cwd_path()+'latest.log', 'w') as f:
+
+    with open('latest.log', 'w') as f:
         f.write(f'====== log generated {datetime.date.today().strftime("%B %d, %Y")} ======\n\n\n'.upper())
-        f.write(c.WATERMARK)
+        f.write(strip_color_codes(c.WATERMARK))
 
     # userdata collecting process
     def get_userdata():
@@ -43,7 +43,7 @@ def main():
             get_userdata()
 
     # delete temporary MoviePy sound files
-    temp_files = glob.glob(cwd_path() + '*TEMP_MPY*') +
+    temp_files = glob.glob(cwd_path() + '*TEMP_MPY*')
     if len(temp_files) > 0:
         log.section('Cleaning temporary files')
         for filename in temp_files:

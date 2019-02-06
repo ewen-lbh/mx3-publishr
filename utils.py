@@ -51,7 +51,7 @@ def color_text(text, color):
     else:
         return CLI_STYLING_CODES[color]+text+CLI_STYLING_CODES['ENDC']
 
-def strip_color_text(text):
+def strip_color_codes(text):
     return re.sub(COLORED_TEXT_REGEX, '', text)
 
 

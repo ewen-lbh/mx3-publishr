@@ -24,15 +24,15 @@ class log:
 
         # coloured output
         msg = CLI_STYLING_CODES[LOG_TYPES_COLORS[logtype]] + msg + CLI_STYLING_CODES['ENDC']
-        plain = strip_color_text(msg)
+        plain = strip_color_codes(msg)
 
         if method == 'print':
             if colored:
                 print(msg)
             else:
                 print(plain)
-            os.chdir(cwd_path())
-            with open(cwd_path()+'latest.log', 'a') as f:
+
+            with open('latest.log', 'a') as f:
                 f.write(plain+'\n')
 
         elif method == 'return':
@@ -85,8 +85,8 @@ class ask:
         if not 'accept_non_ascii' in flags and not is_ascii(answer):
             log.fatal('The answer contains special characters.\nOnly ASCII characters are allowed for now.')
         # add answer to logs
-        os.chdir(cwd_path())
-        with open(cwd_path()+'latest.log', 'a') as f:
+
+        with open('latest.log', 'a') as f:
             f.write(USER_INPUT_INDICATOR+answer+'\n')
         if answer == '/config':
             import main
