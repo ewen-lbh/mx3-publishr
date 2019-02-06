@@ -170,6 +170,7 @@ class Audio:
                 os.chdir(self.parent.dirs.audio)
                 zip_file.write(filename(path))
         log.success(f'Created full {self.parent.kind} zip file successfully !')
+        self.full_album_path = zip_file_dir+zip_file_name
 
 
         if ask.confirm('Open the zip file ?'):

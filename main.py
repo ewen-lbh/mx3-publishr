@@ -14,9 +14,9 @@ def main():
     log.watermark()
     # latest.log header
 
-    with open('latest.log', 'w') as f:
-        f.write(f'====== log generated {datetime.date.today().strftime("%B %d, %Y")} ======\n\n\n'.upper())
-        f.write(strip_color_codes(c.WATERMARK))
+    # with open('latest.log', 'w') as f:
+    #     f.write(f'====== log generated {datetime.date.today().strftime("%B %d, %Y")} ======\n\n\n'.upper())
+    #     f.write(strip_color_codes(c.WATERMARK))
 
     # userdata collecting process
     def get_userdata():
@@ -58,7 +58,7 @@ def main():
     track = Data(userdata)
 
     # recreate non-ideal situation to test audio files renaming, cover art & video generation
-    if c.TESTING_MODE:
+    if c.TESTING_MODE and c.TESTING_DESTRUCTIVE:
         log.section('Debugging initial steps')
         log.warn('Recreating initial file conditions...')
         debug.init(track)
@@ -109,8 +109,13 @@ def main():
         # pprint(vars(track))
         track.audio.make_zip_file()
 
+    log.section('Website uploading')
+    track.website.upload()
+
     log.section('Tweeting the new track')
-    track.social.twitter()
+    # track.social.twitter()
+
+
 
 
 if __name__ == '__main__':
