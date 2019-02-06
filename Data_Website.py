@@ -159,6 +159,3 @@ class Website:
             log.warn('Cancelled.')
         time.sleep(666666666)
 
-
-if __name__ == '__main__':
-    test()
