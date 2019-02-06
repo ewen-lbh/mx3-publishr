@@ -31,3 +31,7 @@ class Data:
         self.website  = self.Website(self)
         self.youtube  = self.YouTube(self)
         self.social   = self.Social(self)
+
+        # skipped steps array
+        # avaible values: tweet, zipfile, ftp, database, metadata, youtube, videos
+        self.skipped_tasks = []

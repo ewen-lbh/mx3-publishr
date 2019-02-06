@@ -101,20 +101,36 @@ def main():
                 track.video.create(filename)
         else:
             log.debug('Video creation step skipped. Your album will not be uploaded to YouTube.')
+            track.skipped_tasks.append('videos')
     else:
         log.info('All videos found! \nThis saved you a sh*t ton of processing time :D')
+    del video_creation_confirmed
 
     if track.kind in COLLECTION_KINDS:
         log.section(f'Full {track.kind} zip file')
-        # pprint(vars(track))
-        track.audio.make_zip_file()
+        if ask.confirm('Make this zip file ?'):
+            track.audio.make_zip_file()
+        else:
+            log.warn('Full album .zip creation skipped.')
+            track.skipped_tasks.append('zipfile')
 
     log.section('Website uploading')
-    track.website.upload()
+    if ask.confirm('Upload to the website ?'):
+        track.website.upload()
+    else:
+        log.warn('Website uploading cancelled.')
+        track.skipped_tasks.append('ftp')
+
+    log.section('Website database insertion')
+    if ask.confirm('Add to the website\'s database ?'):
+
+    else:
+        log.warn('Database insertion skipped.')
+        track.skipped_tasks.append('database')
+
 
     log.section('Tweeting the new track')
-    # track.social.twitter()
-
+    track.social.twitter()
 
 
 
