@@ -104,7 +104,7 @@ def main():
             track.skipped_tasks.append('videos')
     else:
         log.info('All videos found! \nThis saved you a sh*t ton of processing time :D')
-    del video_creation_confirmed
+
 
     if track.kind in COLLECTION_KINDS:
         log.section(f'Full {track.kind} zip file')
@@ -123,7 +123,7 @@ def main():
 
     log.section('Website database insertion')
     if ask.confirm('Add to the website\'s database ?'):
-
+        track.website.database()
     else:
         log.warn('Database insertion skipped.')
         track.skipped_tasks.append('database')

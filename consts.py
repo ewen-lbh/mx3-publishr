@@ -101,7 +101,8 @@ DB_FIELDS_SCHEMES = {
 }
 DB_NAME = 'mx3'
 DB_TABLE = 'musiclist'
-
+# phpmyadmin url
+PMA_URL = 'https://mx3creations.com/phpmyadmin'
 DB_QUERY_SCHEME = f'INSERT INTO {DB_NAME}.{DB_TABLE} ([keys]) VALUES ([values])'
 
 # --- Website Filesystem ---
@@ -118,7 +119,6 @@ WEBSITE_PATHS = {
     'full_album': 'Full [kind_pretty].zip',
 }
 LOCAL_WEBSITE_ROOT = 'C:/wamp-projects/main-website/new/resources/'
-
 # --- ID3 Tags ---
 COVERS_DESCRIPTION = f'Artwork by {SELF_NAME} - {SELF_WEBSITE["pretty"]}'
 

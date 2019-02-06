@@ -1,10 +1,16 @@
+import datetime
+import json
 import os
 import shutil
+import time
 
-from cli import log
-from consts import WEBSITE_PATHS, LOCAL_WEBSITE_ROOT, COLLECTION_KINDS, FILENAME_SCHEMES
+from selenium import webdriver
+
+import credentials
+from cli import log, ask
+from consts import WEBSITE_PATHS, LOCAL_WEBSITE_ROOT, COLLECTION_KINDS, FILENAME_SCHEMES, CHROMEDRIVER_PATH, PMA_URL
 from ftplib import FTP
-from utils import scheme, filename
+from utils import scheme, filename, intpadding
 
 
 class Website:
@@ -118,3 +124,41 @@ class Website:
 
 
         print(ftp.dir())
+
+    def database(self):
+        now = datetime.datetime.now()
+        date_Ymd = str(f'{now.year}-{intpadding(now.month, strsize=2)}-{intpadding(now.day, strsize=2)}')
+
+        browser = webdriver.Chrome(CHROMEDRIVER_PATH)
+        browser.get(PMA_URL)
+        browser.find_element_by_xpath('//*[@id="input_password"]').send_keys(credentials.DB_CREDENTIALS['pwd'])
+        browser.find_element_by_xpath('//*[@id="input_username"]').send_keys(credentials.DB_CREDENTIALS['id'])
+        browser.find_element_by_xpath('//*[@id="input_go"]').click()
+        time.sleep(2)
+        browser.find_element_by_xpath('//*[@id="pma_navigation_tree_content"]/ul/li[2]/a').click()
+        time.sleep(1.5)
+        browser.find_element_by_xpath('//*[@id="pma_navigation_tree_content"]/ul/li[2]/div[4]/ul/li[6]/a').click()
+        time.sleep(2.5)
+        browser.find_element_by_xpath('//*[@id="pma_ignore_all_errors_popup"]').click()
+        time.sleep(0.5)
+        browser.find_element_by_xpath('//*[@id="topmenu"]/li[5]/a').click()
+        time.sleep(0.5)
+        browser.find_element_by_xpath('//*[@id="field_2_3"]').send_keys(self.web_kind)
+        browser.find_element_by_xpath('//*[@id="field_5_3"]').send_keys(self.parent.collection)
+        browser.find_element_by_xpath('//*[@id="field_6_3"]').clear()
+        browser.find_element_by_xpath('//*[@id="field_6_3"]').send_keys(self.parent.artist)
+        browser.find_element_by_xpath('//*[@id="field_7_3"]').send_keys(date_Ymd)
+        browser.find_element_by_xpath('//*[@id="field_11_3"]').send_keys('nolink' if 'youtube' in self.parent.skipped_tasks else '')  # todo youtube url
+        browser.find_element_by_xpath('//*[@id="field_12_3"]').send_keys(self.parent.description['en'])  # todo english description
+        browser.find_element_by_xpath('//*[@id="field_13_3"]').send_keys(self.parent.description['fr'])  # todo french description
+        browser.find_element_by_xpath('//*[@id="field_14_3"]').send_keys(json.dumps([self.parent.audio.get('track', filename(i)) for i in self.parent.audio.lists['paths']])) # get track names
+        if ask.confirm('Add this to the database ?'):
+            browser.execute_script('window.scrollTo(0,document.body.scrollHeight)')  # scroll to bottom
+            browser.find_element_by_xpath('//*[@id="buttonYes"]').click()
+        else:
+            log.warn('Cancelled.')
+        time.sleep(666666666)
+
+
+if __name__ == '__main__':
+    test()
