@@ -17,7 +17,7 @@ Main objectives
 - [x] .zip Full Album archive creation
 - [ ] Upload to YouTube
 - [ ] Upload to a website (ftp/ssh+database+newsletter)
-- [-] Publish a post on social medias (twitter+instagram+facebook)
+- [x] Publish a post on twitter
 - [x] Log all info to a latest.log file
 
 /!\\ Readme imported from my personnal trello card's description
