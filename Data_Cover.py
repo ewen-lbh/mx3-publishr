@@ -8,6 +8,7 @@ import numpy as np
 class Cover:
     def __init__(self, parentself):
         self.parent = parentself
+        self.lists = {}
 
     def get(self, what):
         base = self.parent.dirs.cover

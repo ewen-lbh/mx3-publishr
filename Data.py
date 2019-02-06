@@ -8,12 +8,10 @@ class Data:
     from Data_Audio import Audio
     from Data_Video import Video
 
-    from Data_Twitter import Twitter
-    from Data_Facebook import Facebook
-    from Data_Instagram import Instagram
     from Data_Database import Database
     from Data_Website import Website
     from Data_YouTube import YouTube
+    from Data_Social import Social
 
     def __init__(self, rawdata=None, **kwargs):
         # Decide wether to import data from dict or from keyword args
@@ -29,9 +27,7 @@ class Data:
         self.audio = self.Audio(self)
         self.video = self.Video(self)
 
-        self.twitter    = self.Twitter(self)
-        self.facebook   = self.Facebook(self)
-        self.instagram  = self.Instagram(self)
-        self.database   = self.Database(self)
-        self.website    = self.Website(self)
-        self.youtube    = self.YouTube(self)
+        self.database = self.Database(self)
+        self.website  = self.Website(self)
+        self.youtube  = self.YouTube(self)
+        self.social   = self.Social(self)

@@ -6,8 +6,11 @@ PRIMITIVE_TYPES = (int, str, bool, float, dict, set, list)
 
 # === ENV ===
 # testing mode: set to true while testing/debugging
-TESTING_MODE = True# === FILES ===
+TESTING_MODE = True
+
+# === FILES ===
 PATH_DRIVE = 'D:'
+CHROMEDRIVER_PATH = PATH_DRIVE+'/Users/ewenl/Documents/Chromedriver/chromedriver.exe'
 BASEPATHS = dict()
 FILENAME_SCHEMES = dict()
 # Cover art consts
@@ -73,7 +76,9 @@ YOUTUBE_GENERIC_TAGS = [
 YOUTUBE_TITLE_SCHEME = '[artist] - [title] ([collection] [kind])'
 
 # --- Social Medias ---
-SOCIAL_MEDIAS_BODY_SCHEME = '[new_word] [kind] !\nÉcoutez-le ici: https://mx3creations.com/track/[trackID]'
+SOCIAL_MEDIAS_BODY_SCHEME = '[new_word] [kind]: "[title]" !\nÉcoutez-le ici: https://mx3creations.com/track/[trackID]' if not TESTING_MODE else """Ceci est un test! 
+Je suis en train de créer un script d\'automatisation en python
+https://github.com/ewen-lbh/mx3-publishr"""
 SOCIAL_MEDIAS_IMAGES = {
     'ig': 'square',
     'fb': 'landscape',

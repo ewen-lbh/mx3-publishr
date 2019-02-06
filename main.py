@@ -13,7 +13,7 @@ def main():
     importlib.reload(c)
     log.watermark()
     # latest.log header
-    os.chdir(cwd_path()) # the zip generation step changes directory, so we need to change it back while logging
+    os.chdir(cwd_path())
     with open(cwd_path()+'latest.log', 'w') as f:
         f.write(f'====== log generated {datetime.date.today().strftime("%B %d, %Y")} ======\n\n\n'.upper())
         f.write(c.WATERMARK)
@@ -43,7 +43,7 @@ def main():
             get_userdata()
 
     # delete temporary MoviePy sound files
-    temp_files = glob.glob(cwd_path() + '*TEMP_MPY*')
+    temp_files = glob.glob(cwd_path() + '*TEMP_MPY*') +
     if len(temp_files) > 0:
         log.section('Cleaning temporary files')
         for filename in temp_files:
@@ -108,6 +108,9 @@ def main():
         log.section(f'Full {track.kind} zip file')
         # pprint(vars(track))
         track.audio.make_zip_file()
+
+    log.section('Tweeting the new track')
+    track.social.twitter()
 
 
 if __name__ == '__main__':
