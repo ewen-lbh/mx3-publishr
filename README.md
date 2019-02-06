@@ -6,6 +6,7 @@ A script to automate the tedious process of getting music out, currently in cons
 - CLI log types dynamically created, see LOG_TYPES in consts.py
 - Automatic video generation from audiofiles and cover art
 - .zip Full Album archive creation
+- Twitter posting
 
 # Roadmap
 Main objectives
@@ -16,7 +17,7 @@ Main objectives
 - [x] .zip Full Album archive creation
 - [ ] Upload to YouTube
 - [ ] Upload to a website (ftp/ssh+database+newsletter)
-- [ ] Publish a post on social medias (twitter+instagram+facebook)
+- [-] Publish a post on social medias (twitter+instagram+facebook)
 - [x] Log all info to a latest.log file
 
 /!\\ Readme imported from my personnal trello card's description
