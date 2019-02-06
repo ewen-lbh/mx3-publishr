@@ -5,6 +5,7 @@ A script to automate the tedious process of getting music out, currently in cons
 - Renaming of audio files following a scheme
 - CLI log types dynamically created, see LOG_TYPES in consts.py
 - Automatic video generation from audiofiles and cover art
+- .zip Full Album archive creation
 
 # Roadmap
 Main objectives
@@ -12,6 +13,7 @@ Main objectives
 - [x] Square cover art creation 
 - [x] Auto video generation 
 - [x] Auto apply metadata
+- [x] .zip Full Album archive creation
 - [ ] Upload to YouTube
 - [ ] Upload to a website (ftp/ssh+database+newsletter)
 - [ ] Publish a post on social medias (twitter+instagram+facebook)
