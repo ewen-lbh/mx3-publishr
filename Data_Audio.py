@@ -54,8 +54,6 @@ class Audio:
         # getting tracks to rename
         log.info('Fetching tracklist for filename correction...')
         to_be_renamed = [i for i in self.lists['filenames'] if i.endswith('.mp3') and not re.match(regex_full, rmext(i))]
-        #for i in to_be_renamed:
-        #    if not i.endswith('.mp3'): del to_be_renamed[to_be_renamed.index(i)]
 
         # if there are any tracks to rename...
         if len(to_be_renamed) > 0:
@@ -167,7 +165,7 @@ class Audio:
 
         with zipfile.ZipFile(zip_file_dir+zip_file_name, 'w') as zip_file:
             for path in self.lists['paths']:
-                os.chdir(cwd_path()) # prevent the log file from writing in the .zip folder
+                # todo prevent the log file from writing in the .zip folder
                 log.debug(f'Adding {filename(path)} to the archive...')
                 os.chdir(self.parent.dirs.audio)
                 zip_file.write(filename(path))
