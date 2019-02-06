@@ -77,7 +77,25 @@ YOUTUBE_GENERIC_TAGS = [
     'Wixiew'
 ]
 YOUTUBE_TITLE_SCHEME = '[artist] - [title] ([collection] [kind])'
-
+YOUTUBE_DESCRIPTION_SCHEME = """
+[en_desc]
+///
+[fr_desc]
+_____________
+DOWNLOADS
+The [kind_pretty]:
+https://mx3creations.com/track/[trackID]
+Just the track "[trackname]"
+https://mx3creations.com/track/[trackID]?play[escaped_trackname]
+Everything:
+Site: https://mx3creations.com/music
+___________________
+CONNECT WITH ME
+Twitter: https://twitter.com/mx3_fr
+Facebook: https://facebook.com/mx3fr
+Instagram: https://instagram.com/mx3_fr
+GitHub: https://github.com/ewen-lbh
+"""
 # --- Social Medias ---
 SOCIAL_MEDIAS_BODY_SCHEME = '[new_word] [kind]: "[title]" !\nÉcoutez-le ici: https://mx3creations.com/track/[trackID]\n#posttofb' if not TESTING_MODE else """Ceci est un test! 
 Je suis en train de créer un script d\'automatisation en python
