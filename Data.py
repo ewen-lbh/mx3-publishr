@@ -8,7 +8,6 @@ class Data:
     from Data_Audio import Audio
     from Data_Video import Video
 
-    from Data_Database import Database
     from Data_Website import Website
     from Data_YouTube import YouTube
     from Data_Social import Social
@@ -27,7 +26,6 @@ class Data:
         self.audio = self.Audio(self)
         self.video = self.Video(self)
 
-        self.database = self.Database(self)
         self.website  = self.Website(self)
         self.youtube  = self.YouTube(self)
         self.social   = self.Social(self)

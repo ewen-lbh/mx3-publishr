@@ -1,3 +1,5 @@
+from pprint import pprint
+
 import configurator
 from utils import *
 import sys
@@ -49,7 +51,7 @@ class log:
     @staticmethod
     def recap(userdata):
         msg = "To recap, here's all the information you gave...\n"
-        msg += '\n'.join(kv_pairs(userdata, '/cSpace', title_case='keys'))
+        msg += '\n'.join(kv_pairs(userdata, '/cSpace', sentence_case='keys'))
         log.info(msg)
 
 
@@ -72,6 +74,32 @@ class log:
         print(color_text(section, SECTION_COLOR))
 
 
+def _fetch_description(file_path):
+    if file_path is None: file_path = cwd_path() + 'descriptions.txt'
+    if not os.path.isfile(file_path): raise FileNotFoundError(f'File {file_path} not found')
+
+    with open(file_path, 'r') as f:
+        lines = f.readlines()
+        # first language in file
+        lang = 'en'
+        fr_lines = []
+        en_lines = []
+        for line in lines:
+            if re.match(r'(.+)////(.+)', line):
+                en_lines.append(re.sub(r'(.+)////(.+)', r'\1', line))
+                fr_lines.append(re.sub(r'(.+)////(.+)', r'\2', line))
+                lang = 'fr'
+            elif lang == 'fr':
+                fr_lines.append(line)
+            else:
+                en_lines.append(line)
+
+    french = ''.join(fr_lines)
+    english = ''.join(en_lines)
+
+    return english, french
+
+
 class ask:
     @staticmethod
     def anything(text, flags=[]):
@@ -80,9 +108,9 @@ class ask:
             answer = str(input(USER_INPUT_INDICATOR))
         except KeyboardInterrupt:
             log.fatal('Script closed.')
-        if not 'case_sensitive' in flags:
+        if 'case_sensitive' not in flags:
             answer = answer.lower()
-        if not 'accept_non_ascii' in flags and not is_ascii(answer):
+        if 'accept_non_ascii' not in flags and not is_ascii(answer):
             log.fatal('The answer contains special characters.\nOnly ASCII characters are allowed for now.')
         # add answer to logs
 
@@ -155,6 +183,29 @@ class ask:
             
         # --- COLLECTION NAME ---
         userdata['collection'] = ask.anything('Please enter the '+userdata['kind']+'\'s title', flags=['case_sensitive'])
+
+        # --- DESCRIPTIONS ---
+        method = ask.choices('Use a file for the descriptions (<english>////<french>) or type them directly ?', ['file', 'manual'], shortcuts=True)
+        restart = True
+        while restart:
+            if method == 'file':
+                file_path = ask.anything(f'Specify the file path... (leave blank for {cwd_path()}descriptions.txt)')
+                if not file_path.strip():  # an empty string is considered as false
+                    file_path = None
+
+                if os.path.isfile(file_path):
+                    userdata['descriptions'] = _fetch_description(file_path)
+                    restart = False
+                else:
+                    restart = True
+                    method  = 'manual'
+            else :
+                userdata['descriptions'] = {
+                    'fr': ask.anything('Enter the french description...', flags=['accept_non_ascii']),
+                    'en': ask.anything('Enter the english description...', flags=['accept_non_ascii'])
+                }
+                restart = False
+        del restart, method
 
         return userdata
 

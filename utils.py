@@ -129,16 +129,28 @@ def search_with_nth_char(array, search, nth=1):
         if search == v[nth-1]: return i, v
     return None
 
+# credit: https://stackoverflow.com/a/11668135/9943464
+def flatten(d, parent_key='', sep='_'):
+    items = []
+    for k, v in d.items():
+        try:
+            items.extend(flatten(v, '%s%s%s' % (parent_key, k, sep)).items())
+        except AttributeError:
+            items.append(('%s%s' % (parent_key, k), v))
+    return dict(items)
+
 # return list of key-value pairs from dictionnary, following used_scheme parameter.
 # [k] = the keys
 # [v] = the values
-def kv_pairs(dictionnary,
+def kv_pairs(dictionary,
              used_scheme="[k]: [v]",
              center=True,
              align='left',
-             title_case=False,
+             sentence_case=False,
              end=''
              ):
+    # flatten dictionary
+    dictionary = flatten(dictionary, sep='>')
     # returned list
     retlist = list()
     # SCHEME PRESETS
@@ -167,17 +179,17 @@ def kv_pairs(dictionnary,
     # Centering
     def spaces_to_add(string, separator=None):
         # get the difference of length between the dictionary's longest key and the current string
-        nb_spaces = len(max(dictionnary.keys(), key=len)) - len(string)
+        nb_spaces = len(max(dictionary.keys(), key=len)) - len(string)
         # add separator to count if set
         if separator is not None: nb_spaces += len(separator)
         # return a string of nb_spaces spaces
         return ''.join([' '] * nb_spaces)
 
     # for each key-value pair
-    for k, v in dictionnary.items():
+    for k, v in dictionary.items():
         # title casing
-        fk = k.title() if title_case in ('keys', 'both') else k
-        fv = v.title() if title_case in ('values', 'both') else v
+        fk = sentence(k) if sentence_case in ('keys', 'both') else k
+        fv = sentence(v) if sentence_case in ('values', 'both') else v
         # centering & aligning keys
         if center:
             if align == 'right': fk = spaces_to_add(fk)+fk
@@ -185,7 +197,7 @@ def kv_pairs(dictionnary,
         # handling of values with newlines
         if '\n' in fv:
             # add number of spaces equivalent to the longest key + the separator
-            fv = fv.replace('\n', '\n'+''.join([' '] * (len(max(dictionnary.keys(), key=len)) + len(separator))))
+            fv = fv.replace('\n', '\n' +''.join([' '] * (len(max(dictionary.keys(), key=len)) + len(separator))))
         # add the character defined in end=
         fv += end
         # make a string
