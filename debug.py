@@ -9,6 +9,10 @@ userdata = {
     'kind' : 'album',
     'artist' : 'Mx3',
     'collection' : 'Etymology',
+    'descriptions': {
+        'fr': 'wesh wesh',
+        'en': 'eef freef guys!'
+    }
 }
 
 

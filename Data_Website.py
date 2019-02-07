@@ -141,13 +141,13 @@ class Website:
         browser.find_element_by_xpath('//*[@id="field_6_3"]').send_keys(self.parent.artist)
         browser.find_element_by_xpath('//*[@id="field_7_3"]').send_keys(date_Ymd)
         browser.find_element_by_xpath('//*[@id="field_11_3"]').send_keys('nolink' if 'youtube' in self.parent.skipped_tasks else '')  # todo youtube url
-        browser.find_element_by_xpath('//*[@id="field_12_3"]').send_keys(self.parent.description['en'])  # todo english description
-        browser.find_element_by_xpath('//*[@id="field_13_3"]').send_keys(self.parent.description['fr'])  # todo french description
+        browser.find_element_by_xpath('//*[@id="field_12_3"]').send_keys(self.parent.descriptions['en'])
+        browser.find_element_by_xpath('//*[@id="field_13_3"]').send_keys(self.parent.descriptions['fr'])
         browser.find_element_by_xpath('//*[@id="field_14_3"]').send_keys(json.dumps([self.parent.audio.get('track', filename(i)) for i in self.parent.audio.lists['paths']])) # get track names
         if ask.confirm('Add this to the database ?'):
             browser.execute_script('window.scrollTo(0,document.body.scrollHeight)')  # scroll to bottom
             browser.find_element_by_xpath('//*[@id="buttonYes"]').click()
         else:
             log.warn('Cancelled.')
-        time.sleep(666666666)
+        browser.quit()
 
