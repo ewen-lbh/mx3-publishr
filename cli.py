@@ -125,7 +125,7 @@ class ask:
         elif answer == '/exit':
             log.fatal('Script closed.')
         else:
-            return answer
+            return str(answer) if answer is not None else ''
 
 
     @staticmethod
@@ -190,8 +190,8 @@ class ask:
         while restart:
             if method == 'file':
                 file_path = ask.anything(f'Specify the file path... (leave blank for {cwd_path()}descriptions.txt)')
-                if not file_path.strip():  # an empty string is considered as false
-                    file_path = None
+                if file_path is None or not file_path.strip():  # an empty string is considered as false
+                    file_path = cwd_path()+'descriptions.txt'
 
                 if os.path.isfile(file_path):
                     userdata['descriptions'] = _fetch_description(file_path)
