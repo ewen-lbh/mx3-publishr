@@ -18,19 +18,6 @@ def main():
     #     f.write(f'====== log generated {datetime.date.today().strftime("%B %d, %Y")} ======\n\n\n'.upper())
     #     f.write(strip_color_codes(c.WATERMARK))
 
-    # userdata collecting process
-    def get_userdata():
-        global userdata
-        global userdata_confirmed
-
-        userdata = ask.userdata()
-
-        if userdata != {}:
-            log.recap(userdata)
-            userdata_confirmed = ask.confirm('Is this information correct ?')
-        else:
-            userdata_confirmed = False
-
     if c.TESTING_MODE:
         # automatically remove files such as cover arts
         userdata = debug.userdata
@@ -38,9 +25,11 @@ def main():
     else:
         userdata = {}
         # handle re-asking
-        get_userdata()
+        userdata_confirmed = False
         while not userdata_confirmed:
-            get_userdata()
+            userdata = ask.userdata()
+            log.recap(userdata)
+            userdata_confirmed = ask.confirm('Is this information correct ?')
 
     # delete temporary MoviePy sound files
     temp_files = glob.glob(cwd_path() + '*TEMP_MPY*')
@@ -52,6 +41,7 @@ def main():
             log.debug(f'Deleted successfully.')
             log.success('Cleaned all temporary files !')
     del temp_files
+
 
     # make new object with userdata (when its confirmed correct by user)
     log.section('Getting tracks')

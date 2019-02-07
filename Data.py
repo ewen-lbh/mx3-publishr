@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from utils import *
 import os
 
@@ -13,13 +15,12 @@ class Data:
     from Data_Social import Social
 
     def __init__(self, rawdata=None, **kwargs):
-        # Decide wether to import data from dict or from keyword args
-        if rawdata is not None: data = rawdata
-        else: data = kwargs
+        # Decide whether to import data from dict or from keyword args
+        data = rawdata if not None else kwargs
         # programmatically add all data dict items as object properties
         for k, v in data.items():
             setattr(self, k, v)
-        
+
         # define inner classes and passes parent self to them
         self.dirs  = self.Dirs(self)
         self.cover = self.Cover(self)

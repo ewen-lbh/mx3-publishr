@@ -78,7 +78,7 @@ def _fetch_description(file_path):
     if file_path is None: file_path = cwd_path() + 'descriptions.txt'
     if not os.path.isfile(file_path): raise FileNotFoundError(f'File {file_path} not found')
 
-    with open(file_path, 'r') as f:
+    with open(file_path, 'r', encoding='utf8') as f:
         lines = f.readlines()
         # first language in file
         lang = 'en'
@@ -97,7 +97,10 @@ def _fetch_description(file_path):
     french = ''.join(fr_lines)
     english = ''.join(en_lines)
 
-    return english, french
+    return {
+        'en': english,
+        'fr': french
+    }
 
 
 class ask:
@@ -197,6 +200,7 @@ class ask:
                     userdata['descriptions'] = _fetch_description(file_path)
                     restart = False
                 else:
+                    log.error(f'Could not find {file_path}\nSwitching to manual mode...')
                     restart = True
                     method  = 'manual'
             else :
