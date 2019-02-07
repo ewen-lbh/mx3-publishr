@@ -92,8 +92,8 @@ class Website:
             print(ftp.dir())
 
         # cover arts (the toughest !)
-        ftp.cwd(self.paths['base'])
         for cover_dir in self.paths['real_covers_dirs']:
+            ftp.cwd(self.paths['base'])
             ftp.cwd(cover_dir)
             fullres = 'fullres_' in cover_dir
             square = 'square' in cover_dir
@@ -113,14 +113,6 @@ class Website:
                 ftp.storbinary(f'STOR {dst_filename}', f)
                 # todo fix this
                 shutil.copyfile(src_folder+src_filename, self.local_website_root+cover_dir+'/'+dst_filename)
-
-
-            # change back to base path for next CWD
-            ftp.cwd(self.paths['base'])
-
-
-
-
 
 
         print(ftp.dir())
