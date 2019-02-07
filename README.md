@@ -19,7 +19,7 @@ Main objectives
 - [ ] Upload to YouTube
 - [ ] Upload to a website (ftp/ssh+database+newsletter)
 - [x] Publish a post on twitter
-- [x] Log all info to a latest.log file
+- [ ] Log all info to a latest.log file
 
 /!\\ Readme imported from my personnal trello card's description
 
