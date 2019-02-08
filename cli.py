@@ -7,7 +7,7 @@ import sys
 
 class log:
     @staticmethod
-    def log(text, logtype, method='print', colored=True):
+    def log(text, logtype, method='print', colored=True, no_newline=False):
         lines = text.split('\n')
         # the "plain" logtype bypasses all the pre-formatting
         if logtype != 'plain':
@@ -30,9 +30,9 @@ class log:
 
         if method == 'print':
             if colored:
-                print(msg)
+                print(msg, end=('' if no_newline else '\n'))
             else:
-                print(plain)
+                print(plain, end=('' if no_newline else '\n'))
 
             # with open('latest.log', 'a') as f:
             #     f.write(plain+'\n')
@@ -63,9 +63,9 @@ class log:
             log.log(text, 'fatal')
 
     @staticmethod
-    def debug(text):
+    def debug(text, **options):
         if VERBOSE_OUTPUT:
-            log.log(text, 'debug')
+            log.log(text, 'debug', **options)
 
     @staticmethod
     def section(section):
@@ -185,7 +185,21 @@ class ask:
             userdata['artist'] = ask.anything('Who did the original track ?', flags=['case_sensitive'])
             
         # --- COLLECTION NAME ---
+        def _append_to_collection(suffix, suffix_kind):
+            global userdata
+            if userdata['kind'] == suffix_kind \
+            and AUTO_ADD_SINGLE_SUFFIX \
+            and not re.match(suffix + '$',userdata['collection']):
+
+                log.info(f'Adding "{suffix}" to the {userdata["kind"]}\'s title')
+                userdata['collection'] += suffix
+
         userdata['collection'] = ask.anything('Please enter the '+userdata['kind']+'\'s title', flags=['case_sensitive'])
+
+        _append_to_collection(REMIX_TRACK_SUFFIX, 'remix')
+        _append_to_collection(SINGLE_COLLECTION_SUFFIX, 'single')
+
+        del _append_to_collection
 
         # --- DESCRIPTIONS ---
         method = ask.choices('Use a file for the descriptions (<english>////<french>) or type them directly ?', ['file', 'manual'], shortcuts=True)

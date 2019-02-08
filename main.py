@@ -53,10 +53,13 @@ def main():
         log.warn('Recreating initial file conditions...')
         debug.init(track)
 
-    log.section('Renaming audio files')
-    # rename tracks badly named
-    # TODO don't show this section if no files to rename
-    track.audio.rename()
+    _to_be_renamed = track.audio.preview_renames()
+    if _to_be_renamed:  # an empty array ('[]') is considered as false)
+        log.section('Renaming audio files')
+        # rename tracks badly named
+        track.audio.rename()
+    else:
+        print('All good!')
 
     log.section('Applying metadata')
     # add metadata to audio files
@@ -77,6 +80,7 @@ def main():
         log.info('All cover art versions (square and landscape) found!')
 
     log.section('Generating missing videos')
+    track.video.update_lists()
     missing_vids = track.video.missing()
     if len(missing_vids) > 0:
         missing_vids_str = '\n'.join(
@@ -89,6 +93,7 @@ def main():
         if video_creation_confirmed:
             for filename in missing_vids:
                 track.video.create(filename)
+            track.video.update_lists()
         else:
             log.debug('Video creation step skipped. Your album will not be uploaded to YouTube.')
             track.skipped_tasks.append('videos')
@@ -121,6 +126,13 @@ def main():
 
     log.section('Tweeting the new track')
     track.social.twitter()
+
+    if 'video' not in track.skipped_tasks:
+        log.section('Uploading to YouTube')
+        log.info(f'Using schemes:\nDESCRIPTION:{YOUTUBE_DESCRIPTION_SCHEME}\nTITLE:{YOUTUBE_TITLE_SCHEME}')
+        if ask.confirm('Upload videos to YouTube ?'):
+            for video_path in track.video.lists['paths']:
+                track.youtube.upload(video_path)
 
 
 

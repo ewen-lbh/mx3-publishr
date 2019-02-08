@@ -14,3 +14,5 @@ credentials.py
 latest.log
 test.txt
 descriptions.txt
+client_secret.json
+.client_secrets.json

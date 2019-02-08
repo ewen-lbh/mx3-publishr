@@ -6,6 +6,7 @@ import time
 class Video:
     def __init__(self, parentself):
         self.parent = parentself
+        self.lists = {}
 
     # returns audio file paths of tracks that doesn't have videos
     def missing(self):
@@ -49,3 +50,9 @@ class Video:
         video.write_videofile(dest_folder+video_file_name, fps=fps, codec='libx264')
         end_time = time.time()
         log.success(f'Done!\nThe video {video_file_name} took {duration_format(end_time - start_time)} to make')
+
+    def update_lists(self):
+        log.debug('Updating video lists...')
+        self.lists['paths'] = os.listdir(self.parent.dirs.video)
+        self.lists['filenames'] = [filename(i) for i in self.lists['paths']]
+        self.lists['names'] = [rmext(i) for i in self.lists['filenames']]

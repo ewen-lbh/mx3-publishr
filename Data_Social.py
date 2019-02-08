@@ -4,7 +4,7 @@ import urllib
 import tweepy
 
 from cli import log, ask
-from consts import TESTING_MODE, SOCIAL_MEDIAS_BODY_SCHEME
+from consts import *
 from credentials import TW_CREDENTIALS
 from utils import scheme
 

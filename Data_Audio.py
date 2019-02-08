@@ -44,53 +44,53 @@ class Audio:
             'names' : [rmext(filename(i)) for i in paths]
         })
 
-
-    def rename(self):
+    def preview_renames(self):
         # pattern checking variables
-        # todo use constants instead of hard-coded regex patterns
-        regex_artistname = r'(.+) - (.+)'
+        # todo use constants instead of hard-coded regex patterns ( for here and for rename() )
         regex_full = r'(\d{2,}) - (.+) - (.+)'
 
         # getting tracks to rename
-        log.info('Fetching tracklist for filename correction...')
-        to_be_renamed = [i for i in self.lists['filenames'] if i.endswith('.mp3') and not re.match(regex_full, rmext(i))]
+        log.debug('Fetching tracklist for filename correction...', no_newline=True)
+        to_be_renamed = [i for i in self.lists['filenames'] if
+                         i.endswith('.mp3') and not re.match(regex_full, rmext(i))]
 
-        # if there are any tracks to rename...
-        if len(to_be_renamed) > 0:
-            # init variables
-            path = self.parent.dirs.audio
-            artist = self.parent.artist
-            preview_renames = dict()
-            # for each file to be renamed
-            for i, filename in enumerate(to_be_renamed):
-                # format cases handling
-                track_no = intpadding(i + 1) # + 1 to avoid having a "00" tracknumber.
-                if re.match(regex_artistname, filename):
-                    renamed = track_no + ' - ' + filename
-                else:
-                    renamed = track_no + ' - ' + artist + ' - ' + filename
-                # put into preview dict
-                preview_renames[filename] = renamed
+        return to_be_renamed
 
-            log.info('Files to be renamed:\n'+'\n'.join(kv_pairs(preview_renames, '/cArrow')))
+    def rename(self, to_be_renamed):
+        # init variables
+        regex_artistname = r'(.+) - (.+)'
+        path = self.parent.dirs.audio
+        artist = self.parent.artist
+        renames_map = dict()
+        # for each file to be renamed
+        for i, filename in enumerate(to_be_renamed):
+            # format cases handling
+            track_no = intpadding(i + 1)  # + 1 to avoid having a "00" tracknumber.
+            if re.match(regex_artistname, filename):
+                renamed = track_no + ' - ' + filename
+            else:
+                renamed = track_no + ' - ' + artist + ' - ' + filename
+            # put into preview dict
+            renames_map[filename] = renamed
 
-            # ask for renaming confirmation...
-            renaming_confirmed = ask.confirm('Rename these files ?')
-            if not renaming_confirmed: log.fatal('User chose to close the script')
+        log.debug(f'Found {len(renames_map)} to rename')
+        log.info('Files to be renamed:\n' + '\n'.join(kv_pairs(renames_map, '/cArrow')))
 
-            # actually renaming...
-            renamed_count = 0
-            for orig, dest in preview_renames.items():
-                # renaming
-                os.rename(path + orig, path + dest)
-                renamed_count += 1
+        # ask for renaming confirmation...
+        renaming_confirmed = ask.confirm('Rename these files ?')
+        if not renaming_confirmed: log.fatal('Impossible to continue without a proper track name format.')
 
-            # loggging, updating lists
-            log.success(f'Renamed {renamed_count} files successfully.')
-            log.debug(f'Updating lists...')
-            self.update_lists(silent=True)
-        else:
-            log.info('Nope! All good :D')
+        # actually renaming...
+        renamed_count = 0
+        for orig, dest in renames_map.items():
+            # renaming
+            os.rename(path + orig, path + dest)
+            renamed_count += 1
+
+        # loggging, updating lists
+        log.success(f'Renamed {renamed_count} files successfully.')
+        log.debug(f'Updating lists...')
+        self.update_lists(silent=True)
 
     # todo fix "invalid date text" message
     def apply_metadata(self):

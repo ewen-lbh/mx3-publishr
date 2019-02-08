@@ -8,7 +8,7 @@ from selenium import webdriver
 
 import credentials
 from cli import log, ask
-from consts import WEBSITE_PATHS, LOCAL_WEBSITE_ROOT, COLLECTION_KINDS, FILENAME_SCHEMES, CHROMEDRIVER_PATH, PMA_URL
+from consts import *
 from ftplib import FTP
 from utils import scheme, filename, intpadding
 

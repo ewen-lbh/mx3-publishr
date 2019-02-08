@@ -65,10 +65,10 @@ def duration_format(sec_elapsed):
 
 
 # === Core ===
-def switch(var, binding):
+def switch(var, binding, default=None):
     for key, value in binding.items():
         if var == key: return value
-    return None
+    return default
 
 # === Types & encodings handling ===
 def is_primitive(var):
@@ -120,7 +120,7 @@ def cwd_path():
 def unix_slashes(path):
     return path.replace('\\', '/')
 
-# === ARRAY OPERATIONS ===
+# === ARRAY & DICTS MANIPULATIONS ===
 # dig through an array, searching for a match against the nth letter of a string
 # return a double (index, value) of the first match, returns None if nothing found.
 # Primarly used for the 'shortcuts' option of cli.ask.choices()
@@ -205,3 +205,5 @@ def kv_pairs(dictionary,
         # add it to the list
         retlist.append(string)
     return retlist
+def exclude_keys(dictionary, exclude_keys):
+    return {k: dictionary[k] for k in set(list(dictionary.keys())) - set(exclude_keys)}
