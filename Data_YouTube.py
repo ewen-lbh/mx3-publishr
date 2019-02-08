@@ -29,15 +29,15 @@ class YouTube:
                 'collection': self.parent.collection,
                 'kind': self.parent.kind
             }),
-            # using repr() to escape newline (\n) chars
-            'description': repr(scheme(YOUTUBE_DESCRIPTION_SCHEME, {
+            # using .encode('string_escape') to escape newline (\n) chars
+            'description': scheme(YOUTUBE_DESCRIPTION_SCHEME, {
                 'en_desc': self.parent.descriptions['en'],
                 'fr_desc': self.parent.descriptions['fr'],
                 'kind_pretty': self.parent.kind if self.parent.kind is not 'ep' else 'EP',  # changes "ep" to "EP"
                 'trackID': self.parent.social._get_track_id(),
                 'escaped_trackname': _escape_trackname(title),
                 'trackname': title
-            })),
+            }).encode('string_escape'),
             'category': 'Music',
             'tags': ', '.join(YOUTUBE_GENERIC_TAGS+filename(rmext(video_path)).split()),  # adds each word of the audio file (without extension) as a tag
             'publish-at': (datetime.datetime.now() + datetime.timedelta(**YOUTUBE_DELAY)).isoformat(),
