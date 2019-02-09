@@ -70,8 +70,9 @@ class log:
     @staticmethod
     def section(section):
         if SECTION_UPPERCASE: section = section.upper()
-        section = f'\n\n\n{SECTION_WRAP[0]+section+SECTION_WRAP[1]}\n'
-        print(color_text(section, SECTION_COLOR))
+        section = f'{SECTION_WRAP[0]+section+SECTION_WRAP[1]}'
+        section_sep = ''.join([SECTION_UNDERLINE_CHAR * len(section.strip())])
+        print(color_text('\n'.join([section, section_sep, '']), SECTION_COLOR))
 
 
 def _fetch_description(file_path):
@@ -193,19 +194,19 @@ class ask:
             userdata['artist'] = ask.anything('Who did the original track ?', flags=['case_sensitive'])
             
         # --- COLLECTION NAME ---
-        def _append_to_collection(suffix, suffix_kind):
-            global userdata
+        def _append_to_collection(suffix, suffix_kind, userdata):
             if userdata['kind'] == suffix_kind \
             and AUTO_ADD_SINGLE_SUFFIX \
             and not re.match(suffix + '$',userdata['collection']):
 
                 log.info(f'Adding "{suffix}" to the {userdata["kind"]}\'s title')
                 userdata['collection'] += suffix
+            return userdata
 
         userdata['collection'] = ask.anything('Please enter the '+userdata['kind']+'\'s title', flags=['case_sensitive'])
 
-        _append_to_collection(REMIX_TRACK_SUFFIX, 'remix')
-        _append_to_collection(SINGLE_COLLECTION_SUFFIX, 'single')
+        userdata = _append_to_collection(REMIX_TRACK_SUFFIX, 'remix', userdata)
+        userdata = _append_to_collection(SINGLE_COLLECTION_SUFFIX, 'single', userdata)
 
         del _append_to_collection
 
