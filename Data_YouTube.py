@@ -1,6 +1,7 @@
 import datetime
 import subprocess
 
+import yt_upload
 from imports import *
 
 class YouTube:
@@ -16,54 +17,59 @@ class YouTube:
         from credentials import YT_CREDENTIALS
         self.credentials = YT_CREDENTIALS
 
+        # todo video_url
+        self.video_url = 'nolink'
+
     def get_upload_data(self, video_path):
-        title = re.sub(r'(.+)\.$', r'\1', self.parent.audio.get('track', chext(video_path, '.mp4')))
-
-        def _escape_trackname(string):
-            return string.replace('_', '~_').replace(' ', '_')
-
         metadata = {
-            'title': scheme(YOUTUBE_TITLE_SCHEME, {
-                'artist': self.parent.artist,
-                'title': title,
-                'collection': self.parent.collection,
-                'kind': self.parent.kind
-            }),
-            # using .encode('string_escape') to escape newline (\n) chars
-            'description': scheme(YOUTUBE_DESCRIPTION_SCHEME, {
-                'en_desc': self.parent.descriptions['en'],
-                'fr_desc': self.parent.descriptions['fr'],
-                'kind_pretty': self.parent.kind if self.parent.kind is not 'ep' else 'EP',  # changes "ep" to "EP"
-                'trackID': self.parent.social._get_track_id(),
-                'escaped_trackname': _escape_trackname(title),
-                'trackname': title
-            }).encode('string_escape'),
-            'category': 'Music',
-            'tags': ', '.join(YOUTUBE_GENERIC_TAGS+filename(rmext(video_path)).split()),  # adds each word of the audio file (without extension) as a tag
-            'publish-at': (datetime.datetime.now() + datetime.timedelta(**YOUTUBE_DELAY)).isoformat(),
-            'client-secrets': cwd_path()+'.client_secrets.json'
+            'title': self.get_video_title(video_path),
+            'description': self.get_description(video_path),
+            'category': '22',  # 22 = Music category
+            'keywords': ', '.join(YOUTUBE_GENERIC_TAGS+filename(rmext(video_path)).split()),  # adds each word of the audio file (without extension) as a tag
+            'privacyStatus': 'private',
+            # 'auth_host_name': 'localhost',
+            # 'auth_host_port': '8888',
+            'logging_level': 'DEBUG',
+            'file': video_path
         }
-        flags = (
-            'auth-browser',
-            'open-link'
-        )
-        return metadata, flags, video_path
+        return metadata
 
     def upload(self, data):
         upload_data = self.get_upload_data(data) if isinstance(data, str) else data
-        metadata = upload_data[0]
-        cmd_flags = upload_data[1]
-        video_file = upload_data[2]
 
-        cmd = 'py external_scripts/youtube-upload/youtube_upload '
-        for k, v in metadata.items():
-            cmd += f'--{k}="{v}" ' if k is not None and v is not None else ''
-        for i in cmd_flags:
-            cmd += f'--{i} ' if i is not None else ''
-        cmd += video_file
 
-        # log.debug(cmd)
-        subprocess.call(cmd)
+
+        vid_id = yt_upload.upload_video(upload_data)
+        log.success(f'Video with ID "{vid_id or "error"}" was successfully uploaded')
+        return vid_id
+
+    def get_track_title(self, video_path):
+        return re.sub(r'(.+)\.$', r'\1', self.parent.audio.get('track', chext(filename(video_path), '.mp4')))
+
+    def get_description(self, video_path=None):
+        title = self.get_track_title(video_path) if video_path is not None else CLI_STYLING_CODES['DARK_RED']+'track title'+CLI_STYLING_CODES['ENDC']
+        def _escape_trackname(string):
+            return string.replace('_', '~_').replace(' ', '_')
+        return scheme(YOUTUBE_DESCRIPTION_SCHEME, {
+            'en_desc': self.parent.descriptions['en'],
+            'fr_desc': self.parent.descriptions['fr'],
+            'kind_pretty': self.parent.kind if self.parent.kind is not 'ep' else 'EP',  # changes "ep" to "EP"
+            'trackID': self.parent.audio.web_track_id,
+            'escaped_trackname': _escape_trackname(title),
+            'trackname': title
+        })
+
+    def get_video_title(self, video_path=None):
+        return scheme(YOUTUBE_TITLE_SCHEME, {
+            'artist': self.parent.artist,
+            'title': self.get_track_title(video_path) if video_path is not None else CLI_STYLING_CODES['DARK_RED']+'track title'+CLI_STYLING_CODES['ENDC'],
+            'collection': self.parent.collection,
+            'kind': self.parent.kind
+        })
+
+    def create_playlist(self):
+        output = subprocess.check_output('py ')
+
 
 
 

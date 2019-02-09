@@ -1,5 +1,5 @@
-import glob
-import webbrowser
+import json
+import urllib
 import zipfile
 
 from imports import *
@@ -110,7 +110,7 @@ class Audio:
             "Track number": color_text(f'1-{total}', 'RED')+f'/{total}'
         }
         log.info('Metadata to apply:\n'+'\n'.join(kv_pairs(metadata, '/cSpace')))
-        if not ask.confirm('Apply that data to all audio files ?'): log.warn('Skipped metadata application')
+        if not ask.confirm('Apply that data to all audio files ?', task_name='apply_metadata'): log.warn('Skipped metadata application')
         else:
             applied_count = 0
             for filepath in self.lists['paths']:
@@ -139,11 +139,6 @@ class Audio:
 
             log.success(f'Applied metadata to {applied_count} audio file(s)')
 
-    def __init__(self, parentself):
-        self.parent = parentself
-        self.lists = {}
-        self.update_lists()
-
     def update_lists(self, silent=False):
         if silent:
             self.lists['paths'] = self.fetch_tracks('paths', silent=True)
@@ -151,6 +146,12 @@ class Audio:
             self.lists['paths'] = self.fetch_tracks('paths')
         self.lists['filenames'] = [filename(i) for i in self.lists['paths']]
         self.lists['names'] = [rmext(i) for i in self.lists['filenames']]
+
+    def get_web_track_id(self):
+        with urllib.request.urlopen("https://mx3creations.com/api/get/track/latest") as url:
+            data = json.loads(url.read())
+            track_id = int(data['id']) + 1
+        return track_id
 
     def make_zip_file(self):
         # define vars
@@ -171,3 +172,9 @@ class Audio:
                 zip_file.write(filename(path))
         log.success(f'Created full {self.parent.kind} zip file successfully !')
         self.full_album_path = zip_file_dir+zip_file_name
+
+    def __init__(self, parentself):
+        self.parent = parentself
+        self.lists = {}
+        self.update_lists()
+        self.web_track_id = self.get_web_track_id()

@@ -53,6 +53,6 @@ class Video:
 
     def update_lists(self):
         log.debug('Updating video lists...')
-        self.lists['paths'] = os.listdir(self.parent.dirs.video)
+        self.lists['paths'] = [self.parent.dirs.video+i for i in os.listdir(self.parent.dirs.video)]
         self.lists['filenames'] = [filename(i) for i in self.lists['paths']]
         self.lists['names'] = [rmext(i) for i in self.lists['filenames']]

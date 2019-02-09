@@ -134,6 +134,9 @@ class ask:
     @staticmethod
     def choices(text, choices, **options):
 
+        if AUTO_MODE and 'task_name' in options:
+            return AUTO_MODE_CHOICES[options['task_name']]
+
         choicestr = '/'.join(choices)
         orig_choices = choices
 
@@ -143,22 +146,27 @@ class ask:
 
         text += '\n('+choicestr+')'
 
-        answer = ask.anything(text)
-
-        if 'shortcuts' in options:
-            answer_shortcut = answer[0]
-
-        while answer not in choices:
-            log.error('"'+answer+'" is not a valid answer, retrying...')
+        retries = 0
+        answer = ''
+        while answer not in choices and retries <= ASK_MAX_RETRIES:
+            if retries > 0: log.error('"'+answer+'" is not a valid answer, retrying...')
             answer = ask.anything(text)
             if 'shortcuts' in options:
                 answer_shortcut = answer[0]
+            retries += 1
+
+        if retries > ASK_MAX_RETRIES: log.fatal(f'Too much retries. To change this limit, change the MULTIPLE_CHOICES_SEPARATOR constant in consts.py')
 
         if 'shortcuts' in options: answer_shortcut = search_with_nth_char(orig_choices, answer_shortcut)[1]
         return answer_shortcut if 'shortcuts' in options else answer
 
     @staticmethod
-    def confirm(text):
+    def confirm(text, **options):
+        if AUTO_MODE and not 'task_name' in options:
+            return True
+        if AUTO_MODE:
+            return AUTO_MODE_CHOICES[options['task_name']]
+
         answer = ask.choices(text, ['y', 'n'])
         return answer == 'y'
 
@@ -227,7 +235,22 @@ class ask:
 
         return userdata
 
+    @staticmethod
+    def mchoices(message, choices):
+        msg = message+f'\nAvailable choices: {", ".join(choices)}\nTo select multiple choices, separate them with "{MULTIPLE_CHOICES_SEPARATOR}"'
+        chosens = []
+        retries = 0
+        while len(chosens) < 1 and retries <= ASK_MAX_RETRIES:
+            if retries > 0: log.error('No valid choices selected: Retrying...')
+            ans = ask.anything(msg)
+            chosens = [i for i in ans.split(MULTIPLE_CHOICES_SEPARATOR) if i in choices]
+            retries += 1
+        if retries > ASK_MAX_RETRIES: log.fatal(f'Too much retries. To change this limit, change the MULTIPLE_CHOICES_SEPARATOR constant in consts.py')
+        return chosens
+
 # add missing log variants from LOG_TYPES if not defined yet
+
+
 for level in LOG_TYPES: 
     if not hasattr(log, level):
         setattr(log, level, staticmethod(lambda text, level=level: log.log(text, level)))

@@ -1,4 +1,7 @@
 import os
+import shlex
+from subprocess import Popen, PIPE
+
 from consts import *
 import re
 
@@ -207,3 +210,19 @@ def kv_pairs(dictionary,
     return retlist
 def exclude_keys(dictionary, exclude_keys):
     return {k: dictionary[k] for k in set(list(dictionary.keys())) - set(exclude_keys)}
+
+# === SUBPROCESS UTILS
+# catch stdout of subprocess call.
+# credit: https://stackoverflow.com/a/21000308/9943464
+def catch_stdout(cmd):
+    """
+    Execute the external command and get its exitcode, stdout and stderr.
+    /!\ Modified to only return out
+    """
+    args = shlex.split(cmd)
+
+    proc = Popen(args, stdout=PIPE, stderr=PIPE)
+    out, err = proc.communicate()
+    exitcode = proc.returncode
+    #
+    return out

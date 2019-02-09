@@ -8,6 +8,7 @@ from cli import *
 from utils import *
 import importlib
 
+
 def main():
     import consts as c
     importlib.reload(c)
@@ -42,13 +43,12 @@ def main():
             log.success('Cleaned all temporary files !')
     del temp_files
 
-
     # make new object with userdata (when its confirmed correct by user)
     log.section('Getting tracks')
     track = Data(userdata)
 
     # recreate non-ideal situation to test audio files renaming, cover art & video generation
-    if c.TESTING_MODE and c.TESTING_DESTRUCTIVE:
+    if c.TESTING_MODE and c.DESTRUCTIVE_TESTING:
         log.section('Debugging initial steps')
         log.warn('Recreating initial file conditions...')
         debug.init(track)
@@ -57,7 +57,7 @@ def main():
     if _to_be_renamed:  # an empty array ('[]') is considered as false)
         log.section('Renaming audio files')
         # rename tracks badly named
-        track.audio.rename()
+        track.audio.rename(_to_be_renamed)
     else:
         print('All good!')
 
@@ -73,11 +73,17 @@ def main():
     if not track.cover.exists('square'):
         log.warn(
             'Square cover art not found.\nCropping the landscape version to make a square one...')
-        crop_direction = ask.choices('What part of it do you want to keep ?', ['left', 'center', 'right'], shortcuts=True)
+        crop_direction = ask.choices('What part of it do you want to keep ?', ['left', 'center', 'right'],
+                                     shortcuts=True, task_name='cover_arts_crop_direction')
         track.cover.make_square(crop_direction)
         del crop_direction
     else:
         log.info('All cover art versions (square and landscape) found!')
+
+    log.section('Creating low resolution cover arts')
+    # if no jpg are found
+    if len([i for i in os.listdir(track.dirs.cover) if '.jpg' in i]) == 0:
+        track.cover.make_lowres()
 
     log.section('Generating missing videos')
     track.video.update_lists()
@@ -89,7 +95,8 @@ def main():
         video_creation_confirmed = ask.confirm(
             'Want to generate videos automatically ? (this will take quite some time)\n' +
             'Note that you can use Ctrl-C at any time to stop the script\n' +
-            'If it gets stuck, please report the issue on github (ewen-lbh/mx3-publishr)')
+            'If it gets stuck, please report the issue on github (ewen-lbh/mx3-publishr)',
+            task_name='create_videos')
         if video_creation_confirmed:
             for filename in missing_vids:
                 track.video.create(filename)
@@ -100,40 +107,46 @@ def main():
     else:
         log.info('All videos found! \nThis saved you a sh*t ton of processing time :D')
 
-
     if track.kind in COLLECTION_KINDS:
         log.section(f'Full {track.kind} zip file')
-        if ask.confirm('Make this zip file ?'):
+        if ask.confirm('Make this zip file ?', task_name='create_zip_file'):
             track.audio.make_zip_file()
         else:
             log.warn('Full album .zip creation skipped.')
             track.skipped_tasks.append('zipfile')
 
     log.section('Website uploading')
-    if ask.confirm('Upload to the website ?'):
+    if ask.confirm('Upload to the website ?', task_name='website'):
         track.website.upload()
     else:
         log.warn('Website uploading cancelled.')
         track.skipped_tasks.append('ftp')
 
     log.section('Website database insertion')
-    if ask.confirm('Add to the website\'s database ?'):
+    log.info('Data to be added:\n' + '\n'.join(kv_pairs(track.website.get_db_data(), used_scheme='/cSpace')))
+    if ask.confirm('Add to the website\'s database ?', task_name='database'):
         track.website.database()
     else:
         log.warn('Database insertion skipped.')
         track.skipped_tasks.append('database')
-
 
     log.section('Tweeting the new track')
     track.social.twitter()
 
     if 'video' not in track.skipped_tasks:
         log.section('Uploading to YouTube')
-        log.info(f'Using schemes:\nDESCRIPTION:{YOUTUBE_DESCRIPTION_SCHEME}\nTITLE:{YOUTUBE_TITLE_SCHEME}')
-        if ask.confirm('Upload videos to YouTube ?'):
+        log.info(f'Video descriptions:\n{track.youtube.get_description()}')
+        log.info(f'Video titles:\n{track.youtube.get_video_title()}')
+        if ask.confirm('Upload videos to YouTube ?', task_name='youtube'):
+            # track.youtube.create_playlist()
             for video_path in track.video.lists['paths']:
                 track.youtube.upload(video_path)
 
+    track.cover.delete_lowres()
+
+    log.log('\n\n\n----------------------', logtype='plain')
+    log.success('All tasks finished :D')
+    log.info(SCRIPT_END_MESSAGE)
 
 
 if __name__ == '__main__':

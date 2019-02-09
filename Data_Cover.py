@@ -9,6 +9,7 @@ class Cover:
     def __init__(self, parentself):
         self.parent = parentself
         self.lists = {}
+        self.update_lists()
 
     def get(self, what):
         base = self.parent.dirs.cover
@@ -52,11 +53,36 @@ class Cover:
             direction_msg='in the center'
 
         log.info("Cropping "+direction_msg+'...')
-
         im.crop((left,bottom,right,top)).save(self.get('square'))
 
         log.success(f"Square cover art successfully saved under the name:\n{self.get('square')}")
-    
+        self.update_lists()
+        im.close()
+
+    def make_lowres(self):
+        if ask.confirm('Create low resolution version of cover arts ?', task_name='website'):
+            for src in self.lists['paths']:
+                png = Image.open(src)
+                png.load()  # required for png.split()
+
+                background = Image.new("RGB", png.size, (255, 255, 255))
+                background.paste(png, mask=png.split()[3])  # 3 is the alpha channel
+
+                background.save(self.parent.dirs.cover+chext(filename(src), 'jpg'), 'JPEG', quality=80)
+
     def exists(self, what):
         log.debug(f'Checking existence of file {self.get(what)}')
         return os.path.isfile(self.get(what))
+
+    def update_lists(self):
+        log.debug('Fetching cover arts ...')
+        self.lists['paths'] = [self.parent.dirs.cover+i for i in os.listdir(self.parent.dirs.cover)]
+        self.lists['filenames'] = [filename(i) for i in self.lists['paths']]
+        self.lists['names'] = [rmext(i) for i in self.lists['filenames']]
+
+    def delete_lowres(self):
+        for cover_art in [i for i in os.listdir(self.parent.dirs.cover) if '.jpg' in i]:
+            os.remove(self.parent.dirs.cover+cover_art)
+
+
+

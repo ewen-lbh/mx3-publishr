@@ -1,7 +1,8 @@
+import webbrowser
 from pprint import pprint
 
+from cli import ask, log
 from utils import *
-import os
 
 
 class Data:
@@ -32,5 +33,9 @@ class Data:
         self.social   = self.Social(self)
 
         # skipped steps array
-        # avaible values: tweet, zipfile, ftp, database, metadata, youtube, videos
+        # available values: tweet, zipfile, website, database, metadata, youtube, videos
         self.skipped_tasks = []
+
+        # Recap found tracks
+        track_paths_map = dict(zip(self.audio.lists['names'], self.audio.lists['paths']))
+        log.info('Audio track paths:\n' + '\n'.join(kv_pairs(track_paths_map, used_scheme='/cSpace')))
