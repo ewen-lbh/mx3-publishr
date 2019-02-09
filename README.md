@@ -18,7 +18,9 @@ Main objectives
 - [x] Auto apply metadata
 - [x] .zip Full Album archive creation
 - [ ] Upload to YouTube
-- [ ] Upload to a website (ftp/ssh+database+newsletter)
+- [ ] Upload to my website's filesystem
+- [x] Upload to my website's database
+- [ ] Send a newsletter
 - [x] Publish a post on twitter
 - [ ] Log all info to a latest.log file
 
