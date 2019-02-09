@@ -7,6 +7,7 @@ A script to automate the tedious process of getting music out, currently in cons
 - Automatic video generation from audiofiles and cover art
 - .zip Full Album archive creation
 - Twitter posting
+- Uploading to a website's database
 - Uploading to website filesystem (local and remote) *almost done, still a bug to fix*
 - Uploading to YouTube *almost done, still a bug to fix*
 
