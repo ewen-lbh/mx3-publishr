@@ -9,9 +9,8 @@ A script to automate the tedious process of getting music out, currently in cons
 - Twitter posting
 - Uploading to a website's database
 - Uploading to website filesystem (local and remote) *almost done, still a bug to fix*
-- Uploading to YouTube *almost done, still a bug to fix*
 
-# Roadmap
+### Roadmap
 Main objectives
 - [x] Auto track renaming 
 - [x] Square cover art creation 
@@ -43,7 +42,7 @@ Main objectives
 - Video (auto-generated w/ fade in&out, using landscape cover if not provided)
 
 ¤ means explicitly added by user
-nothing means implicitly fetched with predetermined paths & filenaming schemes
+else implicitly fetched with predetermined paths & filenaming schemes
 
 ### FILES CREATED
 - Lowres cover art versions
