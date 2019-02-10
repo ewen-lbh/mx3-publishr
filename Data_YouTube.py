@@ -1,12 +1,3 @@
-import subprocess
-import subprocess
-import time
-
-import yt_upload
-from selenium import webdriver
-from selenium.webdriver.support.wait import WebDriverWait
-
-import credentials
 from consts import *
 from utils import *
 

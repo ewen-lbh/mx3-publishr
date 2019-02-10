@@ -1,5 +1,6 @@
 import sys
 import webbrowser
+from consts import *
 
 import configurator
 from utils import *
@@ -72,6 +73,10 @@ class log:
 		section_sep = ''.join([SECTION_UNDERLINE_CHAR * len(section.strip())])
 		print(color_text('\n'.join([section, section_sep, '']), SECTION_COLOR))
 
+# add missing log variants from LOG_TYPES if not defined yet
+for level in LOG_TYPES:
+	if not hasattr(log, level):
+		setattr(log, level, staticmethod(lambda text, level=level: log.log(text, level)))
 
 def _fetch_description(file_path):
 	if file_path is None: file_path = cwd_path() + 'descriptions.txt'
@@ -256,11 +261,28 @@ class ask:
 		if retries > ASK_MAX_RETRIES: log.fatal(
 			f'Too much retries. To change this limit, change the MULTIPLE_CHOICES_SEPARATOR constant in consts.py')
 		return chosens
+	
+	@staticmethod
+	def automode():
+		from consts import (
+			AUTO_MODE_CHOICES, AUTO_MODE,
+			AUTO_MODE_ASK_TASKS
+		)
+		global AUTO_MODE, AUTO_MODE_CHOICES
 
+		if ask.confirm('Use automatic mode ?'):
+			AUTO_MODE = True
+		
+		if AUTO_MODE and AUTO_MODE_ASK_TASKS:
+			choices = ask.mchoices('What tasks to perform ?',
+									[k for k, v in AUTO_MODE_CHOICES.items() if isinstance(v, bool)])
 
-# add missing log variants from LOG_TYPES if not defined yet
+			crop_dir = ask.choices('Crop direction for cover art image ?', ['left','center','right'], shortcuts=True)
 
+			for k, v in AUTO_MODE_CHOICES.items():
+				# Set to True if task is selected by user, else set to False
+				AUTO_MODE_CHOICES[k] = k in choices
 
-for level in LOG_TYPES:
-	if not hasattr(log, level):
-		setattr(log, level, staticmethod(lambda text, level=level: log.log(text, level)))
+				# change crop direction if set by user
+				AUTO_MODE_CHOICES['cover_arts_crop_direction'] = crop_dir
+

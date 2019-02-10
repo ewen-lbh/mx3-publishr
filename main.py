@@ -30,6 +30,11 @@ def main():
 			log.recap(userdata)
 			userdata_confirmed = ask.confirm('Is this information correct ?')
 
+	# if AUTO_MODE_ASK:
+	# 	log.section('Automatic mode')
+	# 	ask.userdata()
+	# todo fix this asking userdata again instead of doing its job
+
 	# delete temporary MoviePy sound files
 	temp_files = glob.glob(cwd_path() + '*TEMP_MPY*')
 	if len(temp_files) > 0:
