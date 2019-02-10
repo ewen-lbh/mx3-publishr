@@ -1,3 +1,4 @@
+import webbrowser
 from pprint import pprint
 
 import configurator
@@ -126,6 +127,14 @@ class ask:
         elif answer == '/reload':
             import main
             main.main()
+        elif answer in ('/web', '/website'):
+            log.info(f'Opening {SELF_WEBSITE["pretty"]} in your web browser...')
+            webbrowser.open(SELF_WEBSITE['full'])
+            return 'RETRY'
+        elif answer in ('/repo','/repository'):
+            log.info(f'Opening the github repository in your web browser...')
+            webbrowser.open('https://www.github.com/ewen-lbh/mx3-publishr')
+            return 'RETRY'
         elif answer == '/exit':
             log.fatal('Script closed.')
         else:
@@ -149,8 +158,8 @@ class ask:
 
         retries = 0
         answer = ''
-        while answer not in choices and retries <= ASK_MAX_RETRIES:
-            if retries > 0: log.error('"'+answer+'" is not a valid answer, retrying...')
+        while (answer not in choices or answer == 'RETRY') and retries <= ASK_MAX_RETRIES:
+            if retries > 0 and answer != 'RETRY': log.error('"'+answer+'" is not a valid answer, retrying...')
             answer = ask.anything(text)
             if 'shortcuts' in options:
                 answer_shortcut = answer[0]

@@ -243,30 +243,11 @@ SPECIAL_CHARS_COMPATIBILITY_LEVEL = 1
 
 # Verbose output: show debug logs (log.debug methods)
 VERBOSE_OUTPUT = True
-SPECIAL_CHARS = {}
-
-if SPECIAL_CHARS_COMPATIBILITY_LEVEL >= 0:
-    SPECIAL_CHARS['drarr'] = '┐'
-    SPECIAL_CHARS['rarr'] = '->'
-    SPECIAL_CHARS['rArr'] = '=>'
-    SPECIAL_CHARS['orarr'] = ''
-    SPECIAL_CHARS['curarr'] = ''
-    SPECIAL_CHARS['ox'] = '(X)'
-
-if SPECIAL_CHARS_COMPATIBILITY_LEVEL >= 1:
-    SPECIAL_CHARS['drarr'] = '↓'
-    SPECIAL_CHARS['rarr'] = '→'
-
-if SPECIAL_CHARS_COMPATIBILITY_LEVEL >= 2:
-    SPECIAL_CHARS['drarr'] = '↴'
-    SPECIAL_CHARS['orarr'] = '↻'
-    SPECIAL_CHARS['curarr'] = '↷'
-    SPECIAL_CHARS['dl'] = '⥙'
-    SPECIAL_CHARS['ox'] = '⦻'
 
 # === WATERMARK ===
-import watermark
 WATERMARK_LOGO_FONT = 'ogre'
+
+import watermark
 WATERMARK = watermark.text
 
 
