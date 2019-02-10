@@ -108,6 +108,11 @@ if 'YouTube':
 	YOUTUBE_ASK_FOR_DELAY = True
 	YOUTUBE_BROWSER_HEADLESS = False
 
+	YOUTUBE_KIND_PLAYLISTS = {
+		'single': 'PLl3OrLj4CmfOnX0xGiJ1UN9txgRDPfWwi',
+		'remix' : 'PLl3OrLj4CmfMBawOABaLCWLwI121dYuqT'
+	}
+
 if 'Social Medias':
 	SOCIAL_MEDIAS_BODY_SCHEME = '[new_word] [kind]: "[title]" !\nÉcoutez-le ici: https://mx3creations.com/track/[trackID]\n#posttofb' if not TESTING_MODE else """Ceci est un test! 
     Je suis en train de créer un script d\'automatisation en python

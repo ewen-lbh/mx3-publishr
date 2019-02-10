@@ -11,7 +11,8 @@ from cli import *
 class Video:
 	def __init__(self, parentself):
 		self.parent = parentself
-		self.lists = {}
+		self.lists = dict()
+		self.update_lists()
 
 	# returns audio file paths of tracks that doesn't have videos
 	def missing(self):
