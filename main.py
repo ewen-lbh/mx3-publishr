@@ -140,10 +140,12 @@ def main():
 		log.section('Uploading to YouTube')
 		log.info(f'Video descriptions:\n{track.youtube.get_description()}')
 		log.info(f'Video titles:\n{track.youtube.get_video_title()}')
+		"""
 		if ask.confirm('Upload videos to YouTube ?', task_name='youtube'):
 			# track.youtube.create_playlist()
 			for video_path in track.video.lists['paths']:
 				track.youtube.upload(video_path)
+		"""
 
 	track.cover.delete_lowres()
 
