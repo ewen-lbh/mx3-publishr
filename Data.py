@@ -33,7 +33,7 @@ class Data:
 		self.video = self.Video(self)
 
 		self.website = self.Website(self)
-		self.youtube = self.YouTube(self)
+		# self.youtube = self.YouTube(self) # disabled youtube since it doesn't rly work
 		self.social = self.Social(self)
 
 		# Recap found tracks
