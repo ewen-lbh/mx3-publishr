@@ -92,8 +92,7 @@ def main():
 	track.video.update_lists()
 	missing_vids = track.video.missing()
 	if len(missing_vids) > 0:
-		missing_vids_str = '\n'.join(
-			[re.sub(f'3$', r'4', filename(i)) for i in missing_vids])  # display video file names
+		missing_vids_str = '\n'.join(track.video.missing('video'))  # display video file names
 		log.warn(f'{len(missing_vids)} video(s) missing:\n{missing_vids_str}')
 		video_creation_confirmed = ask.confirm(
 			'Want to generate videos automatically ? (this will take quite some time)\n' +
@@ -106,7 +105,6 @@ def main():
 			track.video.update_lists()
 		else:
 			log.debug('Video creation step skipped. Your album will not be uploaded to YouTube.')
-			track.skipped_tasks.append('videos')
 	else:
 		log.info('All videos found! \nThis saved you a sh*t ton of processing time :D')
 
@@ -116,14 +114,12 @@ def main():
 			track.audio.make_zip_file()
 		else:
 			log.warn('Full album .zip creation skipped.')
-			track.skipped_tasks.append('zipfile')
 
 	log.section('Website uploading')
 	if ask.confirm('Upload to the website ?', task_name='website'):
 		track.website.upload()
 	else:
 		log.warn('Website uploading cancelled.')
-		track.skipped_tasks.append('ftp')
 
 	log.section('Website database insertion')
 	log.info('Data to be added:\n' + '\n'.join(kv_pairs(track.website.get_db_data(), used_scheme='/cSpace')))
@@ -131,19 +127,12 @@ def main():
 		track.website.database()
 	else:
 		log.warn('Database insertion skipped.')
-		track.skipped_tasks.append('database')
 
 	log.section('Tweeting the new track')
 	track.social.twitter()
 
-	if 'video' not in track.skipped_tasks:
-		log.section('Uploading to YouTube')
-		log.info(f'Video descriptions:\n{track.youtube.get_description()}')
-		log.info(f'Video titles:\n{track.youtube.get_video_title()}')
-		if ask.confirm('Upload videos to YouTube ?', task_name='youtube'):
-			# track.youtube.create_playlist()
-			for video_path in track.video.lists['paths']:
-				track.youtube.upload(video_path)
+	log.section('Uploading to YouTube')
+	track.youtube.print_info()
 
 	track.cover.delete_lowres()
 

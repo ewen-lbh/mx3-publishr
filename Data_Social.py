@@ -37,8 +37,7 @@ class Social:
 				log.success('Tweet posted')
 			else:
 				log.warn('Tweet cancelled')
-				self.parent.skipped_tasks.append('tweet')
+
 		else:
 			log.warn(
 				'Tweeting is disabled in testing mode.\nDisable testing mode by typing /config and then disable testing mode')
-			self.parent.skipped_tasks.append('tweet')

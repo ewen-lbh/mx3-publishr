@@ -38,7 +38,7 @@ class Audio:
 			else:
 				log.fatal(f'No files found in directory:\n{directory}')
 		else:
-			log.warn(f'Creating audio files directory')
+			log.warn(f'No audio files directory found!\nCreating {directory} and exiting...')
 			os.mkdir(directory)
 			log.fatal(f"Can't find the audio files directory:\n{directory}")
 
@@ -131,8 +131,10 @@ class Audio:
 				# track number (current, total)
 				audiofile.tag.track_num = (self.get('tracknumber', filename(filepath)), total)
 				# release date YYYY-MM-dd
-				audiofile.tag.original_release_date = audiofile.tag.release_date = audiofile.tag.recording_date = eyed3.core.Date(
-					date_y, month=date_m, day=date_d)
+				audiofile.tag.original_release_date = \
+					audiofile.tag.release_date = \
+					audiofile.tag.recording_date = \
+					eyed3.core.Date(year=date_y, month=date_m, day=date_d)
 				# album arts (type, imagedata, imagetype, description)
 				audiofile.tag.images.set = (3, metadata['Cover art path'], 'image/png', COVERS_DESCRIPTION)
 

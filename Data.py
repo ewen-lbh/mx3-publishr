@@ -1,3 +1,5 @@
+import json
+
 from cli import log
 from utils import *
 
@@ -13,9 +15,14 @@ class Data:
 	from Data_Social import Social
 
 	def __init__(self, rawdata=None, **kwargs):
-		# Decide whether to import data from dict or from keyword args
-		data = rawdata if not None else kwargs
-		# programmatically add all data dict items as object properties
+		if 'from_record' in kwargs:
+			data = self.from_record()
+		else:
+			# Decide whether to import data from dict or from keyword args
+			data = rawdata if not None else kwargs
+
+		self.raw_data = data
+			# programmatically add all data dict items as object properties
 		for k, v in data.items():
 			setattr(self, k, v)
 
@@ -28,10 +35,6 @@ class Data:
 		self.website = self.Website(self)
 		self.youtube = self.YouTube(self)
 		self.social = self.Social(self)
-
-		# skipped steps array
-		# available values: tweet, zipfile, website, database, metadata, youtube, videos
-		self.skipped_tasks = []
 
 		# Recap found tracks
 		track_paths_map = dict(zip(self.audio.lists['names'], self.audio.lists['paths']))

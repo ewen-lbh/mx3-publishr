@@ -26,9 +26,11 @@ class Cover:
 		im = Image.open(self.get('landscape'))
 		w, h = im.size  # Get dimensions
 		log.debug(f"Image dimensions:{w} by {h}")
-		neww = math.floor(w / 2)
-		newh = h
+		neww = newh = 1080
 		if w != 1920 or h != 1080:
+			# TODO  rescale to 1920x1080 and save original as "{name} cover art (original)"
+			neww = math.floor(w / 2)
+			newh = h
 			log.warn("Image dimensions aren't regular (1920x1080)")
 
 		if direction == 'right':
@@ -46,13 +48,19 @@ class Cover:
 			direction_msg = 'to the left'
 
 		else:
-			left = (w - neww) / 2
-			bottom = 0
-			right = (w + neww) / 2
-			top = newh
+			left = math.floor((w - neww) / 2)
+			bottom = math.floor((h - newh) /2)
+			right = math.floor((w + neww) / 2)
+			top = math.floor((h + newh) / 2)
 			direction_msg = 'in the center'
 
 		log.info("Cropping " + direction_msg + '...')
+		log.debug("Crop coordinates:\n"+'\n'.join(kv_pairs({"left": str(left),
+		                                                    "bottom": str(bottom),
+		                                                    "right": str(right),
+		                                                    "top": str(top),
+		                                                    "direction": direction
+		                                                    })))
 		im.crop((left, bottom, right, top)).save(self.get('square'))
 
 		log.success(f"Square cover art successfully saved under the name:\n{self.get('square')}")
@@ -76,7 +84,10 @@ class Cover:
 
 	def update_lists(self):
 		log.debug('Fetching cover arts ...')
-		self.lists['paths'] = [self.parent.dirs.cover + i for i in os.listdir(self.parent.dirs.cover)]
+		self.lists['paths'] = [self.parent.dirs.cover + i
+		                       for i in os.listdir(self.parent.dirs.cover)
+		                       if '.jpg' in i or '.png' in i]
+
 		self.lists['filenames'] = [filename(i) for i in self.lists['paths']]
 		self.lists['names'] = [rmext(i) for i in self.lists['filenames']]
 

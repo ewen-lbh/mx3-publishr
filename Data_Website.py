@@ -137,7 +137,7 @@ class Website:
 		data = self.get_db_data()
 
 		options = webdriver.chrome.options.Options()
-		if DATABASE_BROWSER_HEADLESS: options.add_argument('--headless')
+		if HEADLESS_BROWSERS: options.add_argument('--headless')
 		browser = webdriver.Chrome(CHROMEDRIVER_PATH, chrome_options=options)
 		log.debug(f'Navigating to {PMA_URL}...')
 		browser.get(PMA_URL)
