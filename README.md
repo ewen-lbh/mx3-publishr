@@ -8,7 +8,7 @@ A script to automate the tedious process of getting music out, currently in cons
 - .zip Full Album archive creation
 - Twitter posting
 - Uploading to a website's database
-- Uploading to website filesystem (local and remote) *almost done, still a bug to fix*
+- Uploading to website filesystem (local and remote)
 
 ### Roadmap
 Main objectives
@@ -18,7 +18,7 @@ Main objectives
 - [x] Auto apply metadata
 - [x] .zip Full Album archive creation
 - [ ] Upload to YouTube
-- [ ] Upload to my website's filesystem
+- [x] Upload to my website's filesystem
 - [x] Upload to my website's database
 - [ ] Send a newsletter
 - [x] Publish a post on twitter
