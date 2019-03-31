@@ -194,7 +194,7 @@ def kv_pairs(dictionary,
         # add separator to count if set
         if separator is not None: nb_spaces += len(separator)
         # return a string of nb_spaces spaces
-        return ''.join([' '] * nb_spaces)
+        return ' ' * nb_spaces
 
     # for each key-value pair
     for k, v in dictionary.items():
