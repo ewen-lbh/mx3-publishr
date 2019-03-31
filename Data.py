@@ -19,7 +19,7 @@ class Data:
 			data = self.from_record()
 		else:
 			# Decide whether to import data from dict or from keyword args
-			data = rawdata if not None else kwargs
+			data = rawdata if rawdata is not None else kwargs
 
 		self.raw_data = data
 			# programmatically add all data dict items as object properties
