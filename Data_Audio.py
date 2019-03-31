@@ -148,10 +148,7 @@ class Audio:
 			log.success(f'Applied metadata to {applied_count} audio file(s)')
 
 	def update_lists(self, silent=False):
-		if silent:
-			self.lists['paths'] = self.fetch_tracks('paths', silent=True)
-		else:
-			self.lists['paths'] = self.fetch_tracks('paths')
+		self.lists['paths'] = self.fetch_tracks('paths', silent=silent)
 		self.lists['filenames'] = [filename(i) for i in self.lists['paths']]
 		self.lists['names'] = [rmext(i) for i in self.lists['filenames']]
 
