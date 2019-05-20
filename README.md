@@ -1,4 +1,9 @@
 # Mx3's Publishr
+
+
+_**NOTICE** This script is no longer maintained, I'm rewriting it and will upload a new repo to github soon_ 
+
+
 A script to automate the tedious process of getting music out, currently in construction.
 ### Currently supported features
 - Cover arts square auto-creation (by cropping)
