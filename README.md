@@ -1,8 +1,8 @@
-# Mx3's Publishr
+<hr>
+*This script is no longer maintained, see an up-to-date version [here](https://github.com/ewen-lbh/publishr)*
+<hr>
 
-<hr>
-_**NOTICE** This script is no longer maintained, I'm rewriting it [here](https://github.com/ewen-lbh/publishr) _ 
-<hr>
+# Mx3's Publishr
 
 A script to automate the tedious process of getting music out, currently in construction.
 ### Currently supported features
