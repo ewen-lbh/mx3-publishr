@@ -1,5 +1,5 @@
 <hr>
-*This script is no longer maintained, see an up-to-date version [here](https://github.com/ewen-lbh/publishr)*
+<i>This script is no longer maintained, see an up-to-date version <a href="https://github.com/ewen-lbh/publishr">here</a></i>
 <hr>
 
 # Mx3's Publishr
